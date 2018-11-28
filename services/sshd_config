@@ -19,6 +19,7 @@ MaxAuthTries 5  # Recommended: 2
 MaxSessions 3
 
 PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
 PasswordAuthentication yes  # Recommended: no
 PermitEmptyPasswords no
 ChallengeResponseAuthentication no
