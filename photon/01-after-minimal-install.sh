@@ -1,9 +1,15 @@
 #!/usr/bin/bash -eux
 
+## downloadable via curl -LO https://git.io/fp2uF
+
 DOMAIN=""
 EMAIL="hostmaster@$DOMAIN"
 USER=""
 TZ=""
+
+[[ -z $DOMAIN ]] || [[ -z $USER ]] || [[ -z $TZ ]] && \
+echo "Please specify DOMAIN, USER and TZ variables before."
+exit 0
 
 ## install git
 tdnf install -y git
@@ -84,3 +90,5 @@ systemctl restart docker
 cd /etc
 git add -A
 git commit -m "config docker daemon"
+
+reboot
