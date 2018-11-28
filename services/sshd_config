@@ -1,4 +1,4 @@
-# curl -Lcurl  https://git.io/fp2VO -o /etc/ssh/sshd_config
+# curl -L https://git.io/fp2VO -o /etc/ssh/sshd_config
 
 Port 22 # Recommeded to change it, require extra steps if SELinux is enabled
 AddressFamily inet  # means only IPv4
