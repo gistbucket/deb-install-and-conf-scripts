@@ -12,14 +12,14 @@ LogLevel INFO # Recommended value for fail2ban
 
 StrictModes yes
 LoginGraceTime 1m
-PermitRootLogin no  # Recommended: no or prohibit-password
+PermitRootLogin yes  # Recommended: no or prohibit-password
 #AllowGroups  # Recommended: ssh, wheel or sudo
 #AllowUsers
 MaxAuthTries 5  # Recommended: 2
 MaxSessions 3
 
 PubkeyAuthentication yes
-PasswordAuthentication no
+PasswordAuthentication yes  # Recommended: no
 PermitEmptyPasswords no
 ChallengeResponseAuthentication no
 
