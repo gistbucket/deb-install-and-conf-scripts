@@ -82,6 +82,7 @@ echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f4):65536 >> /etc/subgi
 
 ## install docker-compose
 curl -L https://github.com/docker/compose/releases/download/$(curl -Ls https://www.servercow.de/docker-compose/latest.php)/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose
+chown root:docker /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
 systemctl enable docker
