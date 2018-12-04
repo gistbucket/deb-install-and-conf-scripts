@@ -1,5 +1,7 @@
-# myScripts
+# myGit
 
-## use at your own risk
+## Just bounch of scripts and configfile
 
-### any question or contribution are welcome
+### use at your own risk
+
+#### any question or contribution are welcome
