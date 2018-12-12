@@ -51,8 +51,8 @@ git commit -m "set timezone"
 groupmod -g 1000 users
 sed "s|100|1000|g" -i /etc/default/useradd
 useradd -mu 1000 -G users -s /bin/bash $USER
-usermod -aG docker akeru
-usermod -aG sshd akeru
+usermod -aG docker $USER
+usermod -aG sshd $USER
 
 cd /etc
 git add -A
