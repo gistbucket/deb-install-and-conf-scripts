@@ -1,5 +1,3 @@
-#!/usr/bin/bash -eux
-
 ## downloadable via curl -LO https://git.io/fp2uF
 
 DOMAIN=""
@@ -7,14 +5,11 @@ EMAIL="hostmaster@$DOMAIN"
 USER=""
 TZ=""
 
-[[ -z $DOMAIN ]] || [[ -z $USER ]] || [[ -z $TZ ]] && \
-echo "Please specify DOMAIN, USER and TZ variables before."
-exit 0
-
 ## install git
 tdnf install -y git
 
-cd /etc
+[[ -n $DOMAIN ]] && \
+cd /etc && \
 git config --global user.email "$EMAIL"
 git config --global user.name "root"
 git init .
