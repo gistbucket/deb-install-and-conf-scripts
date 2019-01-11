@@ -22,17 +22,22 @@ define('AUTH_KEY',         '');
 define('SECURE_AUTH_KEY',  '');
 define('LOGGED_IN_KEY',    '');
 define('NONCE_KEY',        '');
-define('SECURITY_KEY',        '');
+define('SECURITY_KEY',     '');
 
 define('AUTH_SALT',        '');
 define('SECURE_AUTH_SALT', '');
 define('LOGGED_IN_SALT',   '');
 define('NONCE_SALT',       '');
-define('SECURITY_SALT',       '');
+define('SECURITY_SALT',    '');
 
 //** https://codex.wordpress.org/Editing_wp-config.php#WP_SITEURL
 define( 'WP_SITEURL', 'https://www.domain.tld' );
 define( 'WP_HOME', 'https://www.domain.tld' );
+
+//** https://codex.wordpress.org/Editing_wp-config.php#Set_Cookie_Domain
+//** Prevent sending cookies with each request
+define( 'COOKIE_DOMAIN', 'www.domain.tld' );
+define( 'NOBLOGREDIRECT', 'https://www.domain.tld' );
 
 //** https://codex.wordpress.org/Editing_wp-config.php#Moving_wp-content_folder
 define( 'WP_CONTENT_DIR', dirname(__FILE__) . '' );
@@ -52,11 +57,6 @@ define( 'UPLOADS', 'assets' );
 //** https://codex.wordpress.org/Editing_wp-config.php#Post_Revisions
 define( 'WP_POST_REVISIONS', 8 );
 
-//** https://codex.wordpress.org/Editing_wp-config.php#Set_Cookie_Domain
-//** Prevent sending cookies with each request
-define( 'COOKIE_DOMAIN', 'www.domain.tld' );
-define( 'NOBLOGREDIRECT', 'https://www.domain.tld' );
-
 //** https://codex.wordpress.org/Editing_wp-config.php#Override_of_default_file_permissions
 define( 'FS_CHMOD_DIR', ( 0755 & ~ umask() ) );
 define( 'FS_CHMOD_FILE', ( 0644 & ~ umask() ) );
@@ -73,12 +73,6 @@ define( 'DISALLOW_FILE_EDIT', true );
 
 //** https://codex.wordpress.org/Editing_wp-config.php#Disable_Plugin_and_Theme_Update_and_Installation
 define( 'DISALLOW_FILE_MODS', true );
-
-//** https://codex.wordpress.org/Editing_wp-config.php#Post_Revisions
-define( 'WP_POST_REVISIONS', '8' );
-
-//** https://codex.wordpress.org/Editing_wp-config.php#Empty_Trash
-define( 'MEDIA_TRASH', true );
 
 //** https://codex.wordpress.org/Editing_wp-config.php#Debug
 define( 'WP_DEBUG',         false );
@@ -102,6 +96,9 @@ define( 'ENFORCE_GZIP',        true );
 define( 'AUTOMATIC_UPDATER_DISABLED', false );  // Disable all automatic updates
 define( 'WP_AUTO_UPDATE_CORE', true ); // Enable all core updates, including minor and major
 define( 'DO_NOT_UPGRADE_GLOBAL_TABLES', false ); // Disable DB Tables auto-update
+
+//** https://codex.wordpress.org/Editing_wp-config.php#Empty_Trash
+define( 'MEDIA_TRASH', true );
 
 //**https://codex.wordpress.org/Editing_wp-config.php#Cleanup_Image_Edits
 define( 'IMAGE_EDIT_OVERWRITE', true );
