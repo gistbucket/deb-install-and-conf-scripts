@@ -87,4 +87,9 @@ cd /etc
 git add -A
 git commit -m "config docker daemon"
 
+echo -e '
+@weekly tdnf update -y
+@weekly docker system prune -f
+' > /var/spool/cron/root
+
 reboot
