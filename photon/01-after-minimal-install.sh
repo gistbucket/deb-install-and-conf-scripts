@@ -24,7 +24,7 @@ git add -A
 git commit -m "update"
 
 ## install basic tools
-tdnf install -y apparmor-profiles apparmor-utils haveged sudo tar unzip wget
+tdnf install -y apparmor-profiles apparmor-utils cronie haveged sudo tar unzip wget
 
 cd /etc
 git add -A
@@ -39,7 +39,7 @@ git add -A
 git commit -m "enable haveged"
 
 ## config timezone
-echo "Servers=0.de.pool.ntp.org 1.de.pool.ntp.org 2.de.pool.ntp.org 3.de.pool.ntp.org" >> /etc/systemd/timesyncd.conf
+echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
 timedatectl set-timezone $TZ
 timedatectl set-ntp 1
 
