@@ -80,16 +80,124 @@ curl -L https://github.com/docker/compose/releases/download/$(curl -Ls https://w
 chown root:docker /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-systemctl enable docker
-systemctl restart docker
-
 cd /etc
 git add -A
 git commit -m "config docker daemon"
 
+## weekly autoupdate system + autoclean docker
 echo -e '
 @weekly tdnf update -y
 @weekly docker system prune -f
 ' > /var/spool/cron/root
 
+## secure /var/tmp +tmpfs
+rm -Rf {/tmp/,/var/tmp/}{.*,*}
+echo -e "
+/tmp /var/tmp none bind,nodev,noexec,nosuid 0 0
+tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0" >> /etc/fstab
+mount -a
+
+### tweak system for redis
+echo "kernel/mm/transparent_hugepage/enabled = never" > /etc/sysfs.conf
+echo "vm.overcommit_memory=1" > /etc/sysctl.d/redis.conf
+
+### HARDEN
+### AUTH-9286
+sed 's|^PASS_MIN_DAYS.*|PASS_MIN_DAYS 7|g' -i /etc/login.defs
+sed 's|^PASS_MAX_DAYS.*|PASS_MAX_DAYS 180|g' -i /etc/login.defs
+
+### AUTH-9328
+sed 's|^UMASK.*|UMASK 027|g' -i /etc/login.defs
+
+### SHLL-6220
+echo -e "
+# set a 5 min timeout policy for bash shell
+TMOUT=300
+readonly TMOUT
+export TMOUT" >> /etc/profile
+
+### FILE-6430
+modprobe -r cramfs freevxfs hfs hfsplus jffs2 squashfs udf
+echo -e "## lynis recommandation FILE-6430
+install cramfs /bin/true
+install freevxfs /bin/true
+install hfs /bin/true
+install hfsplus /bin/true
+install jffs2 /bin/true
+install squashfs /bin/true
+install udf /bin/true
+" > /etc/modprobe.d/blacklist_filesystem
+
+### STRG-1840, 1841, 1842
+modprobe -r usb-storage
+echo -e "## lynis recommandation STRG-1840
+blacklist usb-storage
+install usb-storage /bin/true
+" > /etc/modprobe.d/blacklist_usb
+
+### STRG-1846
+modprobe -r firewire-core firewire_ohci
+echo -e "## lynis recommandation STRG-1846
+blacklist firewire-core
+install firewire_core /bin/true
+install firewire_ohci /bin/true
+" > /etc/modprobe.d/blacklist_firewire
+
+### BANN-7126
+uname -op > /etc/issue
+echo -e "
+********************************************************************
+*                                                                  *
+* This system is for the use of authorized users only.  Usage of   *
+* this system may be monitored and recorded by system personnel.   *
+*                                                                  *
+* Anyone using this system expressly consents to such monitoring   *
+* and is advised that if such monitoring reveals possible          *
+* evidence of criminal activity, system personnel may provide the  *
+* evidence from such monitoring to law enforcement officials.      *
+*                                                                  *
+********************************************************************
+" >> /etc/issue
+cp -f /etc/issue /etc/issue.net
+
+### KRNL-6000
+echo -e "## lynis expectation
+fs.protected_hardlinks=1
+fs.protected_symlinks=1
+fs.suid_dumpable=0" > /etc/sysctl.d/fs.conf
+
+echo -e "## lynis expectation
+kernel.core_uses_pid=1
+kernel.ctrl-alt-del=0
+#kernel.dmesg_restrict=1 # already in photon
+#kernel.kptr_restrict=2 # already in photon
+#kernel.randomize_va_space=2 # already in photon
+#kernel.sysrq=0 # already in photon
+kernel.yama.ptrace_scope=1 2 3" > /etc/sysctl.d/kernel.conf
+
+echo -e "## lynis expectation
+net.ipv4.conf.all.accept_redirects=0
+net.ipv4.conf.all.accept_source_route=0
+net.ipv4.conf.all.bootp_relay=0
+net.ipv4.conf.all.forwarding=0
+net.ipv4.conf.all.log_martians=1
+net.ipv4.conf.all.mc_forwarding=0
+net.ipv4.conf.all.proxy_arp=0
+net.ipv4.conf.all.rp_filter=1
+net.ipv4.conf.all.send_redirects=0
+net.ipv4.conf.default.accept_redirects=0
+net.ipv4.conf.default.accept_source_route=0
+net.ipv4.conf.default.log_martians=1
+net.ipv4.icmp_echo_ignore_broadcasts=1
+net.ipv4.icmp_ignore_bogus_error_responses=1
+net.ipv4.tcp_syncookies=1
+#net.ipv4.tcp_timestamps=0 1 already in photon" > /etc/sysctl.d/ipv4.conf
+
+echo -e "## lynis expectation
+net.ipv6.conf.all.accept_redirects=0
+net.ipv6.conf.all.accept_source_route=0
+net.ipv6.conf.default.accept_redirects=0
+net.ipv6.conf.default.accept_source_route=0" > /etc/sysctl.d/ipv6.conf
+
+systemctl enable docker
 reboot
