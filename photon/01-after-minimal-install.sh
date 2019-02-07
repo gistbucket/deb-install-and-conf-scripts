@@ -24,7 +24,7 @@ git add -A
 git commit -m "update"
 
 ## install basic tools
-tdnf install -y apparmor-profiles apparmor-utils cronie haveged sudo tar unzip wget
+tdnf install -y apparmor-profiles apparmor-utils bindutils cronie haveged iputils sudo tar unzip wget
 
 cd /etc
 git add -A
@@ -64,14 +64,13 @@ mkdir /etc/docker && \
 echo -e '{
 "experimental": false,
 "live-restore": true,
-"ipv6": false,
 "no-new-privileges": false,
 "userns-remap": "dockremap"
 }' > /etc/docker/daemon.json
 
 [[ -z $(grep dockremap /etc/passwd) ]] && \
-groupadd -g 700 dockremap && \
-useradd -Mu 700 -g 700 -s /bin/false dockremap && \
+groupadd -g 32 dockremap && \
+useradd -Mu 32 -g 32 -s /bin/false dockremap && \
 echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f3):65536 >> /etc/subuid && \
 echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f4):65536 >> /etc/subgid
 
@@ -105,9 +104,6 @@ echo "vm.overcommit_memory=1" > /etc/sysctl.d/redis.conf
 ### AUTH-9286
 sed 's|^PASS_MIN_DAYS.*|PASS_MIN_DAYS 7|g' -i /etc/login.defs
 sed 's|^PASS_MAX_DAYS.*|PASS_MAX_DAYS 180|g' -i /etc/login.defs
-
-### AUTH-9328
-sed 's|^UMASK.*|UMASK 027|g' -i /etc/login.defs
 
 ### SHLL-6220
 echo -e "
@@ -144,9 +140,7 @@ install firewire_ohci /bin/true
 " > /etc/modprobe.d/blacklist_firewire
 
 ### BANN-7126
-uname -op > /etc/issue
-echo -e "
-********************************************************************
+echo -e "********************************************************************
 *                                                                  *
 * This system is for the use of authorized users only.  Usage of   *
 * this system may be monitored and recorded by system personnel.   *
@@ -156,48 +150,8 @@ echo -e "
 * evidence of criminal activity, system personnel may provide the  *
 * evidence from such monitoring to law enforcement officials.      *
 *                                                                  *
-********************************************************************
-" >> /etc/issue
+********************************************************************" >> /etc/issue
 cp -f /etc/issue /etc/issue.net
-
-### KRNL-6000
-echo -e "## lynis expectation
-fs.protected_hardlinks=1
-fs.protected_symlinks=1
-fs.suid_dumpable=0" > /etc/sysctl.d/fs.conf
-
-echo -e "## lynis expectation
-kernel.core_uses_pid=1
-kernel.ctrl-alt-del=0
-#kernel.dmesg_restrict=1 # already in photon
-#kernel.kptr_restrict=2 # already in photon
-#kernel.randomize_va_space=2 # already in photon
-#kernel.sysrq=0 # already in photon
-kernel.yama.ptrace_scope=1 2 3" > /etc/sysctl.d/kernel.conf
-
-echo -e "## lynis expectation
-net.ipv4.conf.all.accept_redirects=0
-net.ipv4.conf.all.accept_source_route=0
-net.ipv4.conf.all.bootp_relay=0
-net.ipv4.conf.all.forwarding=0
-net.ipv4.conf.all.log_martians=1
-net.ipv4.conf.all.mc_forwarding=0
-net.ipv4.conf.all.proxy_arp=0
-net.ipv4.conf.all.rp_filter=1
-net.ipv4.conf.all.send_redirects=0
-net.ipv4.conf.default.accept_redirects=0
-net.ipv4.conf.default.accept_source_route=0
-net.ipv4.conf.default.log_martians=1
-net.ipv4.icmp_echo_ignore_broadcasts=1
-net.ipv4.icmp_ignore_bogus_error_responses=1
-net.ipv4.tcp_syncookies=1
-#net.ipv4.tcp_timestamps=0 1 already in photon" > /etc/sysctl.d/ipv4.conf
-
-echo -e "## lynis expectation
-net.ipv6.conf.all.accept_redirects=0
-net.ipv6.conf.all.accept_source_route=0
-net.ipv6.conf.default.accept_redirects=0
-net.ipv6.conf.default.accept_source_route=0" > /etc/sysctl.d/ipv6.conf
 
 systemctl enable docker
 reboot
