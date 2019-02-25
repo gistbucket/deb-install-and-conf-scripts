@@ -97,8 +97,9 @@ mkdir -p /srv/{data,docker} /var/lib/docker
 echo -e "
 /srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0
 " >> /etc/fstab
-chown root:users /srv/.
 chmod g=rwx /srv/.
+chown root:docker /srv/.
+chown $USER:users /srv/data/.
 mount -a
 
 ## secure /var/tmp +tmpfs
