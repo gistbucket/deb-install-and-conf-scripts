@@ -91,11 +91,21 @@ echo -e '
 @weekly docker system prune -f
 ' > /var/spool/cron/root
 
+## /var/lib/docker in /srv
+rm -Rf /var/lib/docker
+mkdir -p /srv/{data,docker} /var/lib/docker
+echo -e "
+/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0
+" >> /etc/fstab
+chown root:users /srv/.
+chmod g=rwx /srv/.
+mount -a
+
 ## secure /var/tmp +tmpfs
 rm -Rf {/tmp/,/var/tmp/}{.*,*}
 echo -e "
-/tmp /var/tmp none bind,nodev,noexec,nosuid 0 0
-tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0" >> /etc/fstab
+/tmp /var/tmp none bind,noatime,nodev,noexec,nosuid 0 0
+tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0" >> /etc/fstab
 mount -a
 
 ### tweak system for redis
