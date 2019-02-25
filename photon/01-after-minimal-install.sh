@@ -53,6 +53,8 @@ sed "s|100|1000|g" -i /etc/default/useradd
 useradd -mu 1000 -G users -s /bin/bash $USER
 usermod -aG docker $USER
 usermod -aG sshd $USER
+mkdir -p $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh
+chown -R $USER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh
 
 cd /etc
 git add -A
