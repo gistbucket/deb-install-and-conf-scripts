@@ -24,7 +24,7 @@ git add -A
 git commit -m "update"
 
 ## install basic tools
-tdnf install -y apparmor-profiles apparmor-utils bindutils cronie gawk haveged iputils sudo tar unzip wget
+tdnf install -y apparmor-profiles bindutils cronie gawk haveged iputils sudo tar unzip wget
 
 cd /etc
 git add -A
