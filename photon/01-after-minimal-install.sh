@@ -110,6 +110,9 @@ echo -e "
 tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0" >> /etc/fstab
 mount -a
 
+### UMASK
+sed "s|umask 027|umask 022|g" -i /etc/profile
+
 ### tweak system for redis
 echo "kernel/mm/transparent_hugepage/enabled = never" > /etc/sysfs.conf
 echo "vm.overcommit_memory=1" > /etc/sysctl.d/redis.conf
