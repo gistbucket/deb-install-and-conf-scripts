@@ -161,6 +161,8 @@ chmod g+w ${DATA:-/var/srv}/.
   echo DATA=${DATA} >> ${DATA:-/var/srv}/data/.env
 [[ -n $(docker info|grep TZ) ]] && \
   echo DOCKREMAPID=${TZ} ${DATA:-/var/srv}/data/.env
+[[ -f ${DATA:-/var/srv}/data/.env ]] && \
+  sed -i "s|# End ~/.bashrc|## docker run \& docker-compose variables\nsource ${DATA:-/var/srv}/data/.env\n\n&|g" .bashrc
 
 cd /etc
 git add -A
