@@ -152,8 +152,8 @@ chown :docker ${DATA:-/var/srv}/.
 chmod g+w ${DATA:-/var/srv}/.
 
 ## define environment
-[[ -z $(grep DOCKREMAPID) ]] && \
-echo DOCKREMAPID=$(sudo grep $(sudo grep userns-remap /etc/docker/daemon.json|cut -d\" -f4) /etc/subuid|cut -d\: -f2) >> ${DATA:-/var/srv}/data/.env
+[[ -n $(docker info|grep userns) ]] && \
+  echo DOCKREMAPID=$(docker info|grep 'Root Dir'|rev|cut -d. -f1|rev) >> ${DATA:-/var/srv}/data/.env
 
 cd /etc
 git add -A
