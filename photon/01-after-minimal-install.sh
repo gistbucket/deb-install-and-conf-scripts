@@ -54,12 +54,22 @@ useradd -mu 1000 -G users -s /bin/bash $USER
 usermod -aG docker $USER
 usermod -aG sshd $USER
 usermod -aG sudo $USER
-mkdir -p $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh
+curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R $USER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh
 
 cd /etc
 git add -A
 git commit -m "add superuser"
+
+## config sshd
+curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
+sed -i 's/AllowGroups ssh/AllowGroups sshd/g' /etc/ssh/sshd_config
+systemctl restart sshd
+
+cd /etc
+git add -A
+git commit -m "config sshd"
 
 ## config docker
 [[ ! -f /etc/docker/daemon.json ]] && \
@@ -112,6 +122,10 @@ echo -e "
 tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0
 " >> /etc/fstab
 mount -a
+
+cd /etc
+git add -A
+git commit -m "remap home,docker in /var/srv +secure tmp"
 
 ### UMASK
 sed "s|umask 027|umask 022|g" -i /etc/profile
