@@ -1,10 +1,16 @@
 ## downloadable via curl -LO https://git.io/fp2uF
 
 DOMAIN=""
-EMAIL="hostmaster@$DOMAIN"
-SUPERUSER=""
+SUPERUSER="" # ie: rescue
+TZ="" # ie: Europe/Zurich
+
 AUTHSSHKey="" # warning copy your public here; if not mine will be!
-TZ=""
+EMAIL="hostmaster@$DOMAIN"
+
+# NO TRAILING SLASH;
+# Default value is /var/srv
+# Plan a large partition to contain home, docker and data
+DATA=""
 
 ## install git
 tdnf install -y git
@@ -115,18 +121,24 @@ echo -e '
 @weekly docker system prune -f
 ' > /var/spool/cron/root
 
-## /home in /var/srv
-mv /home /var/srv
+## /home
+mv /home ${DATA:-/var/srv}/
 mkdir /home
 echo -e "
-/var/srv/home /home none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
+${DATA:-/var/srv}/home /home none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
 
-## /var/lib/docker in /var/srv
-rm -Rf /var/lib/docker
-mkdir -p /var/srv/{data,docker} /var/lib/docker
-echo -e "/var/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
-chown $SUPERUSER:users /var/srv/data/.
-mount -a
+## /var/lib/docker
+[[ -d /var/lib/docker ]] && \
+docker stop $(docker ps -a -q) && \
+systemctl stop docker && \
+mv /var/lib/docker ${DATA:-/var/srv}/
+
+[[ ! -d /var/lib/docker ]] && \
+mkdir -p ${DATA:-/var/srv}/docker /var/lib/docker && \
+echo -e "${DATA:-/var/srv}/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
+
+mkdir -p ${DATA:-/var/srv}/data
+chown $SUPERUSER:users ${DATA:-/var/srv/data}.
 
 ## secure /var/tmp +tmpfs
 rm -Rf {/tmp/,/var/tmp/}{.*,*}
@@ -134,14 +146,18 @@ echo -e "
 /tmp /var/tmp none bind,noatime,nodev,noexec,nosuid 0 0
 tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0
 " >> /etc/fstab
+
 mount -a
+chown :docker ${DATA:-/var/srv}/.
+chmod g+w ${DATA:-/var/srv}/.
+
+## define environment
+[[ -z $(grep DOCKREMAPID) ]] && \
+echo DOCKREMAPID=$(grep $(sudo grep userns-remap /etc/docker/daemon.json|cut -d\" -f4) /etc/subuid|cut -d\: -f2) >> ${DATA:-/var/srv}/data/.env
 
 cd /etc
 git add -A
-git commit -m "remap home,docker in /var/srv +secure tmp"
-
-chown :docker /var/srv/.
-chmod g+w /var/srv/.
+git commit -m "remap the datas +secure tmp"
 
 ### UMASK
 sed "s|umask 027|umask 022|g" -i /etc/profile
