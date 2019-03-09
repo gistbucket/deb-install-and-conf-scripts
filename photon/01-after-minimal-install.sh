@@ -177,5 +177,7 @@ echo -e "********************************************************************
 ********************************************************************" > /etc/issue
 cp -f /etc/issue /etc/issue.net
 
+txnf install -y photon-upgrade
+
 systemctl enable docker
 reboot
