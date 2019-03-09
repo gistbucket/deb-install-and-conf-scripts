@@ -21,6 +21,7 @@ services:
       - /srv/data/webproxy/conf.d:/etc/nginx/conf.d
       - /srv/data/webproxy/vhost.d:/etc/nginx/vhost.d
       - /srv/data/webproxy/html:/usr/share/nginx/html
+      - /srv/data/webproxy/log/nginx:/var/log/nginx
       - /srv/data/webproxy/certs:/etc/nginx/certs:ro
       - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
   docker-gen:
@@ -72,5 +73,6 @@ curl -o ./nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/maste
 docker-compose up -d
 
 sudo chown $USER:dockremap -R /srv/data/webproxy/conf.d
+chmod 0644 /srv/data/webproxy/conf.d/default.conf
 
 exit 0
