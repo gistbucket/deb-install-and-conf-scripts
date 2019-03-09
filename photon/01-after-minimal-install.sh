@@ -2,7 +2,7 @@
 
 DOMAIN=""
 EMAIL="hostmaster@$DOMAIN"
-USER=""
+SUPERUSER=""
 TZ=""
 
 ## install git
@@ -50,13 +50,13 @@ git commit -m "set timezone"
 ## add user
 groupmod -g 1000 users
 sed "s|100|1000|g" -i /etc/default/useradd
-useradd -mu 1000 -G users -s /bin/bash $USER
-usermod -aG docker $USER
-usermod -aG sshd $USER
-usermod -aG sudo $USER
-curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
-curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
-chown -R $USER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$USER/.ssh
+useradd -mu 1000 -G users -s /bin/bash $SUPERUSER
+usermod -aG docker $SUPERUSER
+usermod -aG sshd $SUPERUSER
+usermod -aG sudo $SUPERUSER
+curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
+chown -R $SUPERUSER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 
 cd /etc
 git add -A
@@ -112,7 +112,7 @@ echo -e "
 rm -Rf /var/lib/docker
 mkdir -p /var/srv/{data,docker} /var/lib/docker
 echo -e "/var/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
-chown $USER:users /var/srv/data/.
+chown $SUPERUSER:users /var/srv/data/.
 mount -a
 
 ## secure /var/tmp +tmpfs
