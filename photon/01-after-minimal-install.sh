@@ -96,17 +96,12 @@ echo -e '
 mv /home /var/srv
 mkdir /home
 echo -e "
-/var/srv/home /home none bind,noatime,nodev,noexec,nosuid 0 0
-" >> /etc/fstab
+/var/srv/home /home none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
 
 ## /var/lib/docker in /var/srv
 rm -Rf /var/lib/docker
 mkdir -p /var/srv/{data,docker} /var/lib/docker
-echo -e "
-/var/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0
-" >> /etc/fstab
-chmod g=rwx /var/srv/.
-chown root:docker /var/srv/.
+echo -e "/var/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
 chown $USER:users /var/srv/data/.
 mount -a
 
@@ -114,7 +109,8 @@ mount -a
 rm -Rf {/tmp/,/var/tmp/}{.*,*}
 echo -e "
 /tmp /var/tmp none bind,noatime,nodev,noexec,nosuid 0 0
-tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0" >> /etc/fstab
+tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0
+" >> /etc/fstab
 mount -a
 
 ### UMASK
@@ -177,7 +173,9 @@ echo -e "********************************************************************
 ********************************************************************" > /etc/issue
 cp -f /etc/issue /etc/issue.net
 
-txnf install -y photon-upgrade
-
 systemctl enable docker
+
+tdnf install -y photon-upgrade
+yes|photon-upgrade.sh
+
 reboot
