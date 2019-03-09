@@ -92,15 +92,22 @@ echo -e '
 @weekly docker system prune -f
 ' > /var/spool/cron/root
 
-## /var/lib/docker in /srv
-rm -Rf /var/lib/docker
-mkdir -p /srv/{data,docker} /var/lib/docker
+## /home in /var/srv
+mv /home /var/srv
+mkdir /home
 echo -e "
-/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0
+/var/srv/home /home none bind,noatime,nodev,noexec,nosuid 0 0
 " >> /etc/fstab
-chmod g=rwx /srv/.
-chown root:docker /srv/.
-chown $USER:users /srv/data/.
+
+## /var/lib/docker in /var/srv
+rm -Rf /var/lib/docker
+mkdir -p /var/srv/{data,docker} /var/lib/docker
+echo -e "
+/var/srv/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0
+" >> /etc/fstab
+chmod g=rwx /var/srv/.
+chown root:docker /var/srv/.
+chown $USER:users /var/srv/data/.
 mount -a
 
 ## secure /var/tmp +tmpfs
@@ -167,7 +174,7 @@ echo -e "********************************************************************
 * evidence of criminal activity, system personnel may provide the  *
 * evidence from such monitoring to law enforcement officials.      *
 *                                                                  *
-********************************************************************" >> /etc/issue
+********************************************************************" > /etc/issue
 cp -f /etc/issue /etc/issue.net
 
 systemctl enable docker
