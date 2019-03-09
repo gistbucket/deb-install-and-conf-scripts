@@ -157,6 +157,8 @@ chmod g+w ${DATA:-/var/srv}/.
 ## define few environment variables
 [[ -n $(docker info|grep userns) ]] && \
   echo DOCKREMAPID=$(docker info|grep 'Root Dir'|rev|cut -d. -f1|rev) >> ${DATA:-/var/srv}/data/.env
+[[ -n $DATA ]] && \
+  echo DATA=${DATA} >> ${DATA:-/var/srv}/data/.env
 [[ -n $(docker info|grep TZ) ]] && \
   echo DOCKREMAPID=${TZ} ${DATA:-/var/srv}/data/.env
 
