@@ -4,11 +4,11 @@
 
 cd /srv
 git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git webproxy
-cd webproxy
+cd /srv/webproxy
 
 echo -e "version: '3'
 services:
-  proxy:
+  nginx:
     image: nginx:alpine
     labels:
         com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
@@ -26,7 +26,7 @@ services:
       - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
   docker-gen:
     image: jwilder/docker-gen
-    command: -notify-sighup proxy -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
     container_name: docker-gen
     restart: always
     userns_mode: host
@@ -51,7 +51,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       NGINX_DOCKER_GEN_CONTAINER: docker-gen
-      NGINX_PROXY_CONTAINER: proxy
+      NGINX_PROXY_CONTAINER: nginx
 
 networks:
   default:
@@ -72,7 +72,6 @@ curl -o ./nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/maste
 
 docker-compose up -d
 
-sudo chown $USER:dockremap -R /srv/data/webproxy/conf.d
 chmod 0644 /srv/data/webproxy/conf.d/default.conf
 
 exit 0
