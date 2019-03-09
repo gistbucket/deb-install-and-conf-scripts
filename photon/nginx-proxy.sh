@@ -79,6 +79,6 @@ curl -o /srv/webproxy/nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx
 cd /srv/webproxy
 docker-compose up -d
 
-chmod 0644 /srv/data/webproxy/conf.d/default.conf
+sudo chmod 0644 /srv/data/webproxy/conf.d/default.conf
 
 exit 0
