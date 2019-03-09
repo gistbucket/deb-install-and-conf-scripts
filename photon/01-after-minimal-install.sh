@@ -1,23 +1,26 @@
 ## downloadable via curl -LO https://git.io/fp2uF
 
-DOMAIN=""
-SUPERUSER="" # ie: rescue
-TZ="" # ie: Europe/Zurich
+##### VAR START #####
 
-AUTHSSHKey="" # warning copy your public here; if not mine will be!
-EMAIL="hostmaster@$DOMAIN"
-
-# NO TRAILING SLASH;
+## NO TRAILING SLASH;
 # Default value is /var/srv
-# Plan a large partition to contain home, docker and data
+# Plan a large and extensible partition which will contain: /home, /var/lib/docker and all the datas
 DATA=""
+
+DOMAIN.TLD="" # ie: https://DOMAIN.TLD or email@DOMAIN.TLD
+SSHAUTHKey="" # warning copy your public here; if not mine will be!
+
+SUPERUSER="rescue"
+TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
+
+##### VAR END #####
 
 ## install git
 tdnf install -y git
 
-[[ -n $DOMAIN ]] && \
+[[ -n ${DOMAIN.TLD} ]] && \
 cd /etc && \
-git config --global user.email "$EMAIL"
+git config --global user.email "hostmaster@${DOMAIN.TLD}"
 git config --global user.name "root"
 git init .
 git add -A
@@ -66,9 +69,9 @@ usermod -aG sudo $SUPERUSER
 [[ ! -d $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh ]] && \
 mkdir $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
-[[ -z ${AUTHSSHKey} ]] && \
-echo ${AUTHSSHKey} $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys
-[[ -n ${AUTHSSHKey} ]] && \
+[[ -z ${SSHAUTHKey} ]] && \
+echo ${SSHAUTHKey} $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys
+[[ -n ${SSHAUTHKey} ]] && \
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R $SUPERUSER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 
@@ -151,9 +154,11 @@ mount -a
 chown :docker ${DATA:-/var/srv}/.
 chmod g+w ${DATA:-/var/srv}/.
 
-## define environment
+## define few environment variables
 [[ -n $(docker info|grep userns) ]] && \
   echo DOCKREMAPID=$(docker info|grep 'Root Dir'|rev|cut -d. -f1|rev) >> ${DATA:-/var/srv}/data/.env
+[[ -n $(docker info|grep TZ) ]] && \
+  echo DOCKREMAPID=${TZ} ${DATA:-/var/srv}/data/.env
 
 cd /etc
 git add -A
