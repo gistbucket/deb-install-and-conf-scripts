@@ -3,7 +3,7 @@
 ## ref: https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion
 
 cd /srv
-git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git proxy
+git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git webproxy
 cd proxy
 
 echo -e "version: '3'
