@@ -54,6 +54,10 @@ useradd -mu 1000 -G users -s /bin/bash $SUPERUSER
 usermod -aG docker $SUPERUSER
 usermod -aG sshd $SUPERUSER
 usermod -aG sudo $SUPERUSER
+
+## config ssh client
+[[ ! -d $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh ]] && \
+mkdir $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R $SUPERUSER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
@@ -62,7 +66,12 @@ cd /etc
 git add -A
 git commit -m "add superuser"
 
-## config sshd
+## config ssh client for root
+[[ ! -d /root/.ssh ]] && \
+mkdir /root/.ssh
+curl -o /root/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+
+## config ssh daemon
 curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
 sed -i 's/AllowGroups ssh/AllowGroups sshd/g' /etc/ssh/sshd_config
 systemctl restart sshd
