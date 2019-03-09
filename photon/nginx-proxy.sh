@@ -13,7 +13,7 @@ services:
     image: nginx:alpine
     labels:
         com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
-    container_name: proxy
+    container_name: nginx
     restart: always
     ports:
       - 0.0.0.0:443:443/tcp
