@@ -153,7 +153,7 @@ chmod g+w ${DATA:-/var/srv}/.
 
 ## define environment
 [[ -z $(grep DOCKREMAPID) ]] && \
-echo DOCKREMAPID=$(grep $(sudo grep userns-remap /etc/docker/daemon.json|cut -d\" -f4) /etc/subuid|cut -d\: -f2) >> ${DATA:-/var/srv}/data/.env
+echo DOCKREMAPID=$(sudo grep $(sudo grep userns-remap /etc/docker/daemon.json|cut -d\" -f4) /etc/subuid|cut -d\: -f2) >> ${DATA:-/var/srv}/data/.env
 
 cd /etc
 git add -A
