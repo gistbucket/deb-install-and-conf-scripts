@@ -140,6 +140,9 @@ cd /etc
 git add -A
 git commit -m "remap home,docker in /var/srv +secure tmp"
 
+chown :docker /var/srv/.
+chmod g+w /var/srv/.
+
 ### UMASK
 sed "s|umask 027|umask 022|g" -i /etc/profile
 
