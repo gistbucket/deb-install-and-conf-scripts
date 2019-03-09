@@ -4,7 +4,7 @@
 
 cd /srv
 git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git webproxy
-cd proxy
+cd webproxy
 
 echo -e "version: '3'
 services:
