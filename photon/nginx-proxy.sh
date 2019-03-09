@@ -3,11 +3,12 @@
 ## ref: https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion
 
 cd /srv
-git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git webproxy
-cd /srv/webproxy
+git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git /srv/webproxy
 
 echo -e "version: '3'
+
 services:
+
   nginx:
     image: nginx:alpine
     labels:
@@ -25,6 +26,7 @@ services:
       - /srv/data/webproxy/certs:/etc/nginx/certs:ro
       - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
       - /var/run/php:/var/run/php
+      
   docker-gen:
     depends_on:
       - nginx
@@ -41,6 +43,7 @@ services:
       - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
+      
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: letsencrypt
@@ -59,20 +62,21 @@ services:
 networks:
   default:
     external:
-      name: webproxy" > docker-compose.yml
+      name: webproxy" > /srv/webproxy/docker-compose.yml
 
 
 [[ -z $(docker network ls|grep webproxy) ]] && \
   docker network create webproxy
 
-curl -o ./nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl
+curl -o /srv/webproxy/nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl
 
 [[ ! -d /srv/data/webproxy ]] && \
     mkdir -p /srv/data/webproxy
 
 [[ ! -d /srv/data/webproxy/conf.d ]] && \
-    sudo cp -r ./conf.d /srv/data/webproxy
+    sudo cp -r /srv/webproxy/conf.d /srv/data/webproxy
 
+cd /srv/webproxy
 docker-compose up -d
 
 chmod 0644 /srv/data/webproxy/conf.d/default.conf
