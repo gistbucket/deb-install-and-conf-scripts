@@ -24,7 +24,10 @@ services:
       - /srv/data/webproxy/log/nginx:/var/log/nginx
       - /srv/data/webproxy/certs:/etc/nginx/certs:ro
       - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
+      - /var/run/php:/var/run/php
   docker-gen:
+    depends_on:
+      - nginx
     image: jwilder/docker-gen
     command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
     container_name: docker-gen
