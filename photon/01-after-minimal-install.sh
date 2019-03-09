@@ -3,6 +3,7 @@
 DOMAIN=""
 EMAIL="hostmaster@$DOMAIN"
 SUPERUSER=""
+AUTHSSHKey="" # warning copy your public here; if not mine will be!
 TZ=""
 
 ## install git
@@ -59,6 +60,9 @@ usermod -aG sudo $SUPERUSER
 [[ ! -d $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh ]] && \
 mkdir $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+[[ -z ${AUTHSSHKey} ]] && \
+echo ${AUTHSSHKey} $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys
+[[ -n ${AUTHSSHKey} ]] && \
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R $SUPERUSER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 
