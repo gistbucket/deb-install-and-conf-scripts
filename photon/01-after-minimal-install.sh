@@ -1,27 +1,26 @@
 ## downloadable via curl -LO https://git.io/fp2uF
 
-##### VAR START #####
+##### ALL VARIABLES ARE OPTIONAL #####
 
 ## NO TRAILING SLASH;
-# Default value is /var/srv
-# Plan a large and extensible partition which will contain: /home, /var/lib/docker and all the datas
-DATA=""
+# Plan a large and extensible partition
+# which will contain: /home, /var/lib/docker and all the datas
+DATA="" # default == /var/srv
 
 DOMAIN.TLD="" # ie: https://DOMAIN.TLD or email@DOMAIN.TLD
-SSHAUTHKey="" # warning copy your public here; if not mine will be!
 
-SUPERUSER="rescue"
+SSHAUTHKey="" # warning copy your public here; if not mine will be!
+SUPERUSER="rescue" # you may want to replace rescue by your own username (will be member of: docker, ssh and sudo)
 TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
 
-##### VAR END #####
+##### END OF VARIABLES SECTION #####
 
 ## install git
 tdnf install -y git
 
-[[ -n ${DOMAIN.TLD} ]] && \
-cd /etc && \
-git config --global user.email "hostmaster@${DOMAIN.TLD}"
-git config --global user.name "root"
+cd /etc
+git config --global user.name "$(echo $USER)"
+git config --global user.email "$(echo $USER)@${DOMAIN.TLD:-$(hostname -s)}"
 git init .
 git add -A
 git commit -m "FreshInstall"
@@ -91,7 +90,7 @@ systemctl restart sshd
 
 cd /etc
 git add -A
-git commit -m "config sshd"
+git commit -m "config ssh daemon"
 
 ## config docker
 [[ ! -f /etc/docker/daemon.json ]] && \
