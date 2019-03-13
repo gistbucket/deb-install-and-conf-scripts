@@ -9,9 +9,9 @@ RepoConfig="ConFig/master"
 RepoScript="ScRIPtS/master"
 
 ## GeoPolitic
-CountISO="$(curl ifconfig.co/country-iso)" # ref: https://ifconfig.io
-TimeZone="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
+CountISO="$(curl -s ifconfig.co/country-iso)" # ref: https://ifconfig.io
+TimeZone="$(curl -s worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
 
 ## NIC
 IPint="$(ip a|grep -m1 BROADCAST -A2|awk '/inet/ {print $2}'|cut -d\/ -f1)"
-IPext="$(curl ifconfig.io/ip)" # ref: https://ifconfig.io
+IPext="$(curl -s ifconfig.io/ip)" # ref: https://ifconfig.io
