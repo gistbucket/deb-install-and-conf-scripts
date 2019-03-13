@@ -1,6 +1,6 @@
-# myGit
+# ScriptTools
 
-## Just bounch of scripts and configfile
+## Just bounch of bash-script
 
 ### use at your own risk
 
