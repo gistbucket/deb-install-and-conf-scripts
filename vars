@@ -1,7 +1,17 @@
 
-## VARIABLES Git
-# IE:GitUserContent="https://raw.githubusercontent.com/jodumont/ConFig/master"
+## Docker-compose
+dcVers=$(curl -s https://docs.docker.com/compose/install/|grep -m 1 'Compose, substitute'|cut -d\> -f3|cut -d\< -f1)
+
+## Git
+GitHost="https://raw.githubusercontent.com"
 GitUser="jodumont"
-GitURL="https://raw.githubusercontent.com"
 RepoConfig="ConFig/master"
 RepoScript="ScRIPtS/master"
+
+## GeoPolitic
+CountISO="$(curl ifconfig.co/country-iso)" # ref: https://ifconfig.io
+TimeZone="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
+
+## NIC
+IPint="$(ip a|grep -m1 BROADCAST -A2|awk '/inet/ {print $2}'|cut -d\/ -f1)"
+IPext="$(curl ifconfig.io/ip)" # ref: https://ifconfig.io
