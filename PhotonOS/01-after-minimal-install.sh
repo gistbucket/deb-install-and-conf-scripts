@@ -7,7 +7,7 @@
 # which will contain: /home, /var/lib/docker and all the datas
 DATA="" # default == /var/srv
 
-DOMAIN.TLD="" # ie: https://DOMAIN.TLD or email@DOMAIN.TLD
+DOMAIN="" # ie: https://DOMAIN.TLD or email@DOMAIN.TLD
 
 SSHAUTHKey="" # warning copy your public here; if not mine will be!
 SUPERUSER="rescue" # you may want to replace rescue by your own username (will be member of: docker, ssh and sudo)
@@ -20,7 +20,7 @@ tdnf install -y git
 
 cd /etc
 git config --global user.name "$(echo $USER)"
-git config --global user.email "$(echo $USER)@${DOMAIN.TLD:-$(hostname -s)}"
+git config --global user.email "$(echo $USER)@${DOMAIN:-$(hostname -s)}"
 git init .
 git add -A
 git commit -m "FreshInstall"
