@@ -1,4 +1,4 @@
-## downloadable via curl -LO https://git.io/fp2uF
+## downloadable via curl -LO https://git.io/fjvTk
 
 ##### ALL VARIABLES ARE OPTIONAL #####
 
