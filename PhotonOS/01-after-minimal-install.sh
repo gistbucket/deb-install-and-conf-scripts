@@ -145,8 +145,9 @@ chown $SUPERUSER:users ${DATA:-/var/srv/data}.
 ## secure /var/tmp +tmpfs
 rm -Rf {/tmp/,/var/tmp/}{.*,*}
 echo -e "
-/tmp /var/tmp none bind,noatime,nodev,noexec,nosuid 0 0
-tmpfs /dev/shm tmpfs noatime,nodev,nosuid,noexec 0 0
+tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0
+tmpfs /tmp tmpfs nodev,nosuid,size=512M 0 0
+/tmp /var/tmp none bind,nodev,noexec,nosuid 0 0
 " >> /etc/fstab
 
 mount -a
