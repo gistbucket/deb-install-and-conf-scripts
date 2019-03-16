@@ -123,6 +123,10 @@ echo -e '
 @weekly docker system prune -f
 ' > /var/spool/cron/root
 
+## USUAL UMASK for SERVER and USER
+sed 's|^UMASK.*|UMASK 022|g' -i /etc/login.defs
+sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
+
 ## /home
 mv /home ${DATA:-/var/srv}/
 mkdir /home
