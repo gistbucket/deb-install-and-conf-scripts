@@ -15,50 +15,22 @@ TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # 
 
 ##### END OF VARIABLES SECTION #####
 
-## install git
-tdnf install -y git
-
-cd /etc
-git config --global user.name "$(echo $USER)"
-git config --global user.email "$(echo $USER)@${DOMAIN:-$(hostname -s)}"
-git init .
-git add -A
-git commit -m "FreshInstall"
-
 ## update
 tdnf update -y
 
-cd /etc
-git add -A
-git commit -m "update"
-
 ## install basic tools
-tdnf install -y apparmor-profiles bindutils cronie gawk haveged iputils sudo tar unzip wget
-
-cd /etc
-git add -A
-git commit -m "basic tools"
+tdnf install -y apparmor-profiles bindutils cronie gawk git haveged iputils sudo tar unzip wget
 
 ## enable haveged
 systemctl enable haveged
 systemctl restart haveged
-
-cd /etc
-git add -A
-git commit -m "enable haveged"
 
 ## config timezone
 echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
 timedatectl set-timezone $TZ
 timedatectl set-ntp 1
 
-cd /etc
-git add -A
-git commit -m "set timezone"
-
 ## add user
-groupmod -g 1000 users
-sed "s|100|1000|g" -i /etc/default/useradd
 useradd -mu 1000 -G users -s /bin/bash $SUPERUSER
 usermod -aG docker $SUPERUSER
 usermod -aG sshd $SUPERUSER
@@ -74,10 +46,6 @@ echo ${SSHAUTHKey} $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R $SUPERUSER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
 
-cd /etc
-git add -A
-git commit -m "add superuser"
-
 ## config ssh client for root
 [[ ! -d /root/.ssh ]] && \
 mkdir /root/.ssh
@@ -87,10 +55,6 @@ curl -o /root/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a
 curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
 sed -i 's/AllowGroups ssh/AllowGroups sshd/g' /etc/ssh/sshd_config
 systemctl restart sshd
-
-cd /etc
-git add -A
-git commit -m "config ssh daemon"
 
 ## config docker
 [[ ! -f /etc/docker/daemon.json ]] && \
@@ -112,10 +76,6 @@ echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f4):65536 >> /etc/subgi
 curl -L https://github.com/docker/compose/releases/download/$(curl -Ls https://www.servercow.de/docker-compose/latest.php)/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose
 chown root:docker /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
-
-cd /etc
-git add -A
-git commit -m "config docker daemon"
 
 ## weekly autoupdate system + autoclean docker
 echo -e '
@@ -167,10 +127,6 @@ chmod g+w ${DATA:-/var/srv}/.
   echo DOCKREMAPID=${TZ} ${DATA:-/var/srv}/data/.env
 [[ -f ${DATA:-/var/srv}/data/.env ]] && \
   sed -i "s|# End ~/.bashrc|## docker run \& docker-compose variables\nsource ${DATA:-/var/srv}/data/.env\n\n&|g" .bashrc
-
-cd /etc
-git add -A
-git commit -m "remap the datas +secure tmp"
 
 ### UMASK
 sed "s|umask 027|umask 022|g" -i /etc/profile
