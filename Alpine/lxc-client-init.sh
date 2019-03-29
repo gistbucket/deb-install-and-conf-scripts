@@ -3,6 +3,7 @@ apk add --no-cache \
   ca-certificates coreutils curl \
   shadow \
   tar tzdata \
+  unzip \
   xz \
   wget
 
