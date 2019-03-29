@@ -9,9 +9,9 @@ apk add --no-cache \
 
 yes|cpan Data::Validate::IP JSON::Any
 
-wget https://sourceforge.net/projects/ddclient/files/latest/download -O ddclient.zip
-unzip ddclient.zip 
-cp ddclient-*/ddclient /usr/bin/
+wget -O /tmp/ddclient.zip https://sourceforge.net/projects/ddclient/files/latest/download
+unzip /tmp/ddclient.zip 
+cp /tmp/ddclient-*/ddclient /usr/bin/
 
 mkdir /etc/ddclient /var/cache/ddclient
 
