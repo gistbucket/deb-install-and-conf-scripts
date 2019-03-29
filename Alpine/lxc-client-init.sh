@@ -7,3 +7,4 @@ apk add --no-cache \
   wget
 
 usermod -s /bin/bash root
+/bin/bash
