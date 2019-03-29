@@ -1,11 +1,11 @@
 #ref: https://wiki.alpinelinux.org/wiki/Ddclient
 
+wget -Phttps://raw.githubusercontent.com/jodumont/ScRIPtS/master/Alpine/lxc-client-init.sh
+
+
 apk add --no-cache \
-  curl \
   make \
-  perl perl-digest-sha1 perl-json perl-utils perl-test-taint perl-netaddr-ip perl-net-ip perl-yaml perl-log-log4perl perl-io-socket-inet6 perl-io-socket-ssl \
-  unzip \
-  wget
+  perl perl-io-socket-ssl perl-log-log4perl perl-net-ip perl-netaddr-ip perl-test-taint perl-utils perl-yaml 
 
 yes|cpan Data::Validate::IP JSON::Any
 
@@ -18,5 +18,6 @@ mkdir /etc/ddclient /var/cache/ddclient
 curl -fsSLo /etc/ddclient/ddclient.conf https://raw.githubusercontent.com/jodumont/ConFig/master/etc/ddclient/ddclient.conf
 curl -fsSLo /etc/init.d/ddclient https://wiki.alpinelinux.org/images/b/bc/Ddclient-install.sh
 
+chomod 600 /etc/ddclient/ddclient.conf
 chmod +x /etc/init.d/ddclient
 rc-update add ddclient
