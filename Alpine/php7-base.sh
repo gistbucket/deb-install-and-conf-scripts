@@ -1,6 +1,6 @@
 ref: https://wiki.alpinelinux.org/wiki/Nginx
 
-wget -P /tmp https://raw.githubusercontent.com/jodumont/ScRIPtS/master/Alpine/nginx.sh
+curl -fsSLo /tmp/nginx.sh https://raw.githubusercontent.com/jodumont/ScRIPtS/master/Alpine/nginx.sh
 sh /tmp/nginx.sh
 
 apk add --update --no-cache \
