@@ -1,4 +1,4 @@
-apk add --no-cache \
+apk add --no-cache --update \
   bash bzip2 \
   ca-certificates coreutils curl \
   nano  \
