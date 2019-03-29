@@ -1,7 +1,7 @@
 #ref: https://wiki.alpinelinux.org/wiki/Ddclient
 
-wget -P /tmp https://raw.githubusercontent.com/jodumont/ScRIPtS/master/Alpine/lxc-client-init.sh
-sh /tmp/lxc-client-init.sh
+curl -fsSLo /tmp/base.sh https://raw.githubusercontent.com/jodumont/ScRIPtS/master/Alpine/base.sh
+sh /tmp/base.sh
 
 apk add --no-cache \
   make \
