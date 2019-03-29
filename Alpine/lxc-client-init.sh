@@ -1,6 +1,7 @@
 apk add --no-cache \
   bash bzip2 \
   ca-certificates coreutils curl \
+  nano  \
   shadow \
   tar tzdata \
   unzip \
