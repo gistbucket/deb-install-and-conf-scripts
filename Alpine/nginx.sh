@@ -5,7 +5,8 @@ sh /tmp/base.sh
 
 apk add --no-cache --update \
   nginx \
-  nginx-mod-http-redis2
+  nginx-mod-http-redis2 \
+  openssl
 
 useradd -MUs /sbin/nologin www
 
