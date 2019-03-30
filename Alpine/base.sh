@@ -1,6 +1,7 @@
 apk add --no-cache --update \
   bash bzip2 \
   ca-certificates coreutils curl \
+  git \
   nano  \
   shadow \
   tar tzdata \
