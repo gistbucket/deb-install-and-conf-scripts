@@ -4,7 +4,8 @@ curl -fsSLo /tmp/base.sh https://raw.githubusercontent.com/jodumont/ScRIPtS/mast
 sh /tmp/base.sh
 
 apk add --no-cache --update \
-  nginx
+  nginx \
+  nginx-mod-http-redis2
 
 useradd -MUs /sbin/nologin www
 
