@@ -1,5 +1,7 @@
 #!/bin/bash
 
+GitUserContent=https://raw.githubusercontent.com/jodumont/ConFig/master
+
 ### EN US UTF-8
 sed -i 's/^# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 locale-gen
