@@ -19,7 +19,7 @@ TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # 
 tdnf update -y
 
 ## install basic tools
-tdnf install -y apparmor-profiles bindutils cronie gawk git haveged iputils sudo tar unzip wget
+tdnf install -y apparmor-profiles bindutils cronie gawk git haveged ipset iputils sudo tar unzip wget
 
 ## enable haveged
 systemctl enable haveged
@@ -84,8 +84,8 @@ echo -e '
 ' > /var/spool/cron/root
 
 ## USUAL UMASK for SERVER and USER
-sed 's|^UMASK.*|UMASK 022|g' -i /etc/login.defs
-sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
+#sed 's|^UMASK.*|UMASK 022|g' -i /etc/login.defs
+#sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
 
 ## /home
 mv /home ${DATA:-/var/srv}/
@@ -129,7 +129,7 @@ chmod g+w ${DATA:-/var/srv}/.
   sed -i "s|# End ~/.bashrc|## docker run \& docker-compose variables\nsource ${DATA:-/var/srv}/data/.env\n\n&|g" .bashrc
 
 ### UMASK
-sed "s|umask 027|umask 022|g" -i /etc/profile
+#sed "s|umask 027|umask 022|g" -i /etc/profile
 
 ### tweak system for redis
 echo "kernel/mm/transparent_hugepage/enabled = never" > /etc/sysfs.conf
