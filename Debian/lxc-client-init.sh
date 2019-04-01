@@ -77,9 +77,6 @@ timedatectl set-ntp 1
 sed 's|^PASS_MIN_DAYS.*|PASS_MIN_DAYS 7|g' -i /etc/login.defs
 sed 's|^PASS_MAX_DAYS.*|PASS_MAX_DAYS 180|g' -i /etc/login.defs
 
-### AUTH-9328
-sed 's|^UMASK.*|UMASK 027|g' -i /etc/login.defs
-
 ### BANN-7126
 curl -fsSLo /etc/issue ${GitUserContent}/etc/issue
 curl -fsSLo /etc/issue.net ${GitUserContent}/etc/issue
