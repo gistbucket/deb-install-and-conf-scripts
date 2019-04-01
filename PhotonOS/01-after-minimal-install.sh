@@ -192,5 +192,3 @@ systemctl enable docker
 
 tdnf install -y photon-upgrade
 yes|photon-upgrade.sh
-
-reboot
