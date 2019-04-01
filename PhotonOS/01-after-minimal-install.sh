@@ -19,7 +19,7 @@ TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # 
 tdnf update -y
 
 ## install basic tools
-tdnf install -y apparmor-profiles apparmor-utils bindutils cronie gawk git haveged ipset iputils sudo tar unzip wget
+tdnf install -y apparmor-profiles apparmor-utils bindutils cronie gawk git haveged ipset iputils socat sudo tar unzip wget
 
 ## enable haveged
 systemctl enable haveged
