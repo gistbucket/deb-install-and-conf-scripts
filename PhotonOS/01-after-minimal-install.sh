@@ -5,7 +5,7 @@
 SSHAUTHKey="" # warning copy your public here; if not mine will be!
 SUPERUSER="rescue" # you may want to replace rescue by your own username (will be member of: docker, ssh and sudo)
 IPext="$(curl https://ipinfo.io/ip)"
-TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
+#WIP TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
 
 ##### END OF VARIABLES SECTION #####
 
@@ -21,10 +21,11 @@ systemctl restart haveged
 
 ## config timezone
 echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
-timedatectl set-timezone ${TZ}
+#WIP timedatectl set-timezone ${TZ}
 timedatectl set-ntp 1
 
 ## add user
+groupmod -g 1000 users
 useradd -mu 1000 -G users -s /bin/bash -d /var/srv/${SUPERUSER} ${SUPERUSER}
 usermod -aG docker ${SUPERUSER}
 usermod -aG sshd ${SUPERUSER}
@@ -57,8 +58,8 @@ echo -e '{
 }' > /etc/docker/daemon.json
 
 [[ -z $(grep dockremap /etc/passwd) ]] && \
-groupadd -g 32 dockremap && \
-useradd -Mu 32 -g 32 -s /bin/false dockremap && \
+groupadd -g 500 dockremap && \
+useradd -Mu 500 -g 500 -s /bin/false dockremap && \
 echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f3):65536 >> /etc/subuid && \
 echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f4):65536 >> /etc/subgid
 
