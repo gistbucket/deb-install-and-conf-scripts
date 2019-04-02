@@ -19,12 +19,12 @@ services:
       - 0.0.0.0:443:443/tcp
       - 0.0.0.0:80:80/tcp
     volumes:
-      - /srv/data/webproxy/conf.d:/etc/nginx/conf.d
-      - /srv/data/webproxy/vhost.d:/etc/nginx/vhost.d
-      - /srv/data/webproxy/html:/usr/share/nginx/html
-      - /srv/data/webproxy/log/nginx:/var/log/nginx
-      - /srv/data/webproxy/certs:/etc/nginx/certs:ro
-      - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
+      - /var/srv/webproxy/conf.d:/etc/nginx/conf.d
+      - /var/srv/webproxy/vhost.d:/etc/nginx/vhost.d
+      - /var/srv/webproxy/html:/usr/share/nginx/html
+      - /var/srv/webproxy/log/nginx:/var/log/nginx
+      - /var/srv/webproxy/certs:/etc/nginx/certs:ro
+      - /var/srv/webproxy/htpasswd:/etc/nginx/htpasswd:ro
       - /var/run/php:/var/run/php
       
   docker-gen:
@@ -36,11 +36,11 @@ services:
     restart: always
     userns_mode: host
     volumes:
-      - /srv/data/webproxy/conf.d:/etc/nginx/conf.d
-      - /srv/data/webproxy/vhost.d:/etc/nginx/vhost.d
-      - /srv/data/webproxy/html:/usr/share/nginx/html
-      - /srv/data/webproxy/certs:/etc/nginx/certs:ro
-      - /srv/data/webproxy/htpasswd:/etc/nginx/htpasswd:ro
+      - /var/srv/webproxy/conf.d:/etc/nginx/conf.d
+      - /var/srv/webproxy/vhost.d:/etc/nginx/vhost.d
+      - /var/srv/webproxy/html:/usr/share/nginx/html
+      - /var/srv/webproxy/certs:/etc/nginx/certs:ro
+      - /var/srv/webproxy/htpasswd:/etc/nginx/htpasswd:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
       
@@ -50,10 +50,10 @@ services:
     restart: always
     userns_mode: host
     volumes:
-      - /srv/data/webproxy/conf.d:/etc/nginx/conf.d
-      - /srv/data/webproxy/vhost.d:/etc/nginx/vhost.d
-      - /srv/data/webproxy/html:/usr/share/nginx/html
-      - /srv/data/webproxy/certs:/etc/nginx/certs:rw
+      - /var/srv/webproxy/conf.d:/etc/nginx/conf.d
+      - /var/srv/webproxy/vhost.d:/etc/nginx/vhost.d
+      - /var/srv/webproxy/html:/usr/share/nginx/html
+      - /var/srv/webproxy/certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       NGINX_DOCKER_GEN_CONTAINER: docker-gen
@@ -70,15 +70,15 @@ networks:
 
 curl -o /srv/webproxy/nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl
 
-[[ ! -d /srv/data/webproxy ]] && \
-    mkdir -p /srv/data/webproxy
+[[ ! -d /var/srv/webproxy ]] && \
+    mkdir -p /var/srv/webproxy
 
-[[ ! -d /srv/data/webproxy/conf.d ]] && \
-    sudo cp -r /srv/webproxy/conf.d /srv/data/webproxy
+[[ ! -d /var/srv/webproxy/conf.d ]] && \
+    sudo cp -r /srv/webproxy/conf.d /var/srv/webproxy
 
 cd /srv/webproxy
 docker-compose up -d
 
-sudo chmod 0644 /srv/data/webproxy/conf.d/default.conf
+sudo chmod 0644 /var/srv/webproxy/conf.d/default.conf
 
 exit 0
