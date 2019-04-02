@@ -2,8 +2,8 @@
 
 ## ref: https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion
 
-cd /srv
-git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git /srv/webproxy
+cd /var/srv
+git clone https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git /var/srv/webproxy
 
 echo -e "version: '3'
 
@@ -62,13 +62,13 @@ services:
 networks:
   default:
     external:
-      name: webproxy" > /srv/webproxy/docker-compose.yml
+      name: webproxy" > /var/srv/webproxy/docker-compose.yml
 
 
 [[ -z $(docker network ls|grep webproxy) ]] && \
   docker network create webproxy
 
-curl -o /srv/webproxy/nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl
+curl -o /var/srv/webproxy/nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl
 
 [[ ! -d /var/srv/webproxy ]] && \
     mkdir -p /var/srv/webproxy
@@ -76,7 +76,7 @@ curl -o /srv/webproxy/nginx.tmpl https://raw.githubusercontent.com/jwilder/nginx
 [[ ! -d /var/srv/webproxy/conf.d ]] && \
     sudo cp -r /srv/webproxy/conf.d /var/srv/webproxy
 
-cd /srv/webproxy
+cd /var/srv/webproxy
 docker-compose up -d
 
 sudo chmod 0644 /var/srv/webproxy/conf.d/default.conf
