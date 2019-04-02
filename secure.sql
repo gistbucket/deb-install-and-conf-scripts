@@ -1,0 +1,3 @@
+DELETE FROM mysql.user WHERE User='';
+DROP DATABASE test;
+FLUSH PRIVILEGES;
