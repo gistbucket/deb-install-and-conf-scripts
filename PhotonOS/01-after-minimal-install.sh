@@ -31,6 +31,11 @@ usermod -aG docker ${SUPERUSER}
 usermod -aG sshd ${SUPERUSER}
 usermod -aG sudo ${SUPERUSER}
 
+chmod 700 /var/srv/${SUPERUSER}/.
+
+chown :docker /var/srv/.
+chmod g+w /var/srv/.
+
 ## config ssh client
 mkdir /var/srv/${SUPERUSER}/.ssh
 curl -o /var/srv/${SUPERUSER}/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
