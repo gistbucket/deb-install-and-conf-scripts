@@ -2,15 +2,9 @@
 
 ##### ALL VARIABLES ARE OPTIONAL #####
 
-## NO TRAILING SLASH;
-# Plan a large and extensible partition
-# which will contain: /home, /var/lib/docker and all the datas
-DATA="" # default == /var/srv
-
-DOMAIN="" # ie: https://DOMAIN.TLD or email@DOMAIN.TLD
-
 SSHAUTHKey="" # warning copy your public here; if not mine will be!
 SUPERUSER="rescue" # you may want to replace rescue by your own username (will be member of: docker, ssh and sudo)
+IPext="$(curl https://ipinfo.io/ip)"
 TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
 
 ##### END OF VARIABLES SECTION #####
@@ -27,27 +21,22 @@ systemctl restart haveged
 
 ## config timezone
 echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
-timedatectl set-timezone $TZ
+timedatectl set-timezone ${TZ}
 timedatectl set-ntp 1
 
 ## add user
-useradd -mu 1000 -G users -s /bin/bash $SUPERUSER
-usermod -aG docker $SUPERUSER
-usermod -aG sshd $SUPERUSER
-usermod -aG sudo $SUPERUSER
+useradd -mu 1000 -G users -s /bin/bash -d /var/srv/${SUPERUSER} ${SUPERUSER}
+usermod -aG docker ${SUPERUSER}
+usermod -aG sshd ${SUPERUSER}
+usermod -aG sudo ${SUPERUSER}
 
 ## config ssh client
-[[ ! -d $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh ]] && \
-mkdir $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
-curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
-[[ -z ${SSHAUTHKey} ]] && \
-echo ${SSHAUTHKey} $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys
-[[ -n ${SSHAUTHKey} ]] && \
-curl -o $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
-chown -R $SUPERUSER.users $(grep HOME /etc/default/useradd|cut -d= -f2)/$SUPERUSER/.ssh
+mkdir /var/srv/${SUPERUSER}/.ssh
+curl -o /var/srv/${SUPERUSER}/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+curl -o /var/srv/${SUPERUSER}/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
+chown -R ${SUPERUSER}:users /var/srv/${SUPERUSER}/.ssh
 
 ## config ssh client for root
-[[ ! -d /root/.ssh ]] && \
 mkdir /root/.ssh
 curl -o /root/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
 
@@ -60,6 +49,7 @@ systemctl restart sshd
 [[ ! -f /etc/docker/daemon.json ]] && \
 mkdir /etc/docker && \
 echo -e '{
+"data-root": "/var/srv/docker",
 "experimental": false,
 "live-restore": true,
 "no-new-privileges": false,
@@ -87,49 +77,13 @@ echo -e '
 #sed 's|^UMASK.*|UMASK 022|g' -i /etc/login.defs
 #sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
 
-## /home
-mv /home ${DATA:-/var/srv}/
-mkdir /home
-echo -e "
-${DATA:-/var/srv}/home /home none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
-
-## /var/lib/docker
-[[ -d /var/lib/docker ]] && \
-docker stop $(docker ps -a -q) && \
-systemctl stop docker && \
-mv /var/lib/docker ${DATA:-/var/srv}/
-
-[[ ! -d /var/lib/docker ]] && \
-mkdir -p ${DATA:-/var/srv}/docker /var/lib/docker && \
-echo -e "${DATA:-/var/srv}/docker /var/lib/docker none bind,noatime,nodev,noexec,nosuid 0 0" >> /etc/fstab
-
-mkdir -p ${DATA:-/var/srv}/data
-chown $SUPERUSER:users ${DATA:-/var/srv/data}.
-
 ## secure /var/tmp +tmpfs
 rm -Rf {/tmp/,/var/tmp/}{.*,*}
 echo -e "
 tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0
 tmpfs /tmp tmpfs nodev,nosuid,size=512M 0 0
-/tmp /var/tmp none bind,nodev,noexec,nosuid 0 0
+/tmp /var/tmp none bind 0 0
 " >> /etc/fstab
-
-mount -a
-chown :docker ${DATA:-/var/srv}/.
-chmod g+w ${DATA:-/var/srv}/.
-
-## define few environment variables
-[[ -n $(docker info|grep userns) ]] && \
-  echo DOCKREMAPID=$(docker info|grep 'Root Dir'|rev|cut -d. -f1|rev) >> ${DATA:-/var/srv}/data/.env
-[[ -n $DATA ]] && \
-  echo DATA=${DATA}/data >> ${DATA:-/var/srv}/data/.env
-[[ -n $(docker info|grep TZ) ]] && \
-  echo DOCKREMAPID=${TZ} ${DATA:-/var/srv}/data/.env
-[[ -f ${DATA:-/var/srv}/data/.env ]] && \
-  sed -i "s|# End ~/.bashrc|## docker run \& docker-compose variables\nsource ${DATA:-/var/srv}/data/.env\n\n&|g" .bashrc
-
-### UMASK
-#sed "s|umask 027|umask 022|g" -i /etc/profile
 
 ### tweak system for redis
 echo "kernel/mm/transparent_hugepage/enabled = never" > /etc/sysfs.conf
