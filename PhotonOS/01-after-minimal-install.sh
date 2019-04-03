@@ -25,7 +25,6 @@ echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /e
 timedatectl set-ntp 1
 
 ## add user
-groupmod -g 1000 users
 useradd -mu 1000 -G users -s /bin/bash -d /var/srv/${SUPERUSER} ${SUPERUSER}
 usermod -aG docker ${SUPERUSER}
 usermod -aG sshd ${SUPERUSER}
