@@ -61,6 +61,7 @@ echo -e '{
 "userns-remap": "dockremap"
 }' > /etc/docker/daemon.json
 
+[[ -n $(grep userns-remap /etc/docker/daemon.json) ]] && \
 [[ -z $(grep dockremap /etc/passwd) ]] && \
 groupadd -g 500 dockremap && \
 useradd -Mu 500 -g 500 -s /bin/false dockremap && \
@@ -83,7 +84,7 @@ echo -e '
 #sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
 
 ## secure /var/tmp +tmpfs
-rm -Rf {/tmp/,/var/tmp/}{.*,*}
+rm -Rf /{tmp,var/tmp}/{.*,*}
 echo -e "
 tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0
 tmpfs /tmp tmpfs nodev,nosuid,size=512M 0 0
