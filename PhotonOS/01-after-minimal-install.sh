@@ -5,7 +5,8 @@
 TZ=""
 SSHAUTHKey="" # warning copy your public here; if not mine will be!
 SUPERUSER="rescue" # you may want to replace rescue by your own username (will be member of: docker, ssh and sudo)
-SUPERPASSWORD="" # if not define, a random password will be define 'openssl rand -base64 64'
+SUPERPASSWORD="" # if not define, a random password will be define 'openssl rand -base64 64' and su - will continue to work
+
 #IPext="$(curl https://ipinfo.io/ip)"
 #WIP TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
 ##### END OF VARIABLES SECTION #####
@@ -26,6 +27,11 @@ TZ="Europe/Berlin"
 timedatectl set-ntp 1
 timedatectl set-timezone ${TZ}
 echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
+
+## deny direct root access
+rm -Rf /root/.ssh
+[[ -n ${SUPERPASSWORD} ]] && \
+passwd --lock root
 
 ## add user
 [[ -z ${SUPERPASSWORD} ]] && \
@@ -52,10 +58,6 @@ curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
 sed -i "s/AllowGroups ssh/AllowUsers ${SUPERUSER}/g" /etc/ssh/sshd_config
 systemctl restart sshd
 
-## deny direct root access
-rm -Rf /root/.ssh
-passwd --lock root
-
 ## config docker
 [[ ! -f /etc/docker/daemon.json ]] && \
 mkdir /etc/docker && \
@@ -77,7 +79,7 @@ echo -e '
 @weekly docker system prune -f
 ' > /var/spool/cron/root
 
-## USUAL UMASK for SERVER and USER
+## usual umask
 sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
 
 ## secure /var/tmp +tmpfs
@@ -87,9 +89,12 @@ tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0
 tmpfs /tmp tmpfs nodev,nosuid,size=512M 0 0
 /tmp /var/tmp none bind 0 0" >> /etc/fstab
 
-### tweak system for redis
+## tweak system for redis
 echo "kernel/mm/transparent_hugepage/enabled = never" > /etc/sysfs.conf
 echo "vm.overcommit_memory=1" > /etc/sysctl.d/redis.conf
+
+## Prepare for IPv6
+sed '/# End.*/iip6tables -A INPUT -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT\nip6tables -A INPUT -p icmpv6 --icmpv6-type neighbor-solicitation -m hl --hl-eq 255 -j ACCEPT\nip6tables -A INPUT -p icmpv6 --icmpv6-type neighbor-advertisement -m hl --hl-eq 255 -j ACCEPT\nip6tables -A INPUT -p icmpv6 --icmpv6-type redirect -m hl --hl-eq 255 -j ACCEPT\n' -i /etc/systemd/scripts/iptables
 
 ### HARDEN
 ### AUTH-9286
