@@ -156,3 +156,7 @@ systemctl enable docker
 
 tdnf install -y photon-upgrade
 yes|photon-upgrade.sh
+
+echo -e "The password for ${SUPERUSER} is ${SUPERPASSWORD}.
+it was saved in /root/.superpassword
+which accessible via 'cat /root/.superpassword' only from ${SUPERUSER}."
