@@ -36,7 +36,7 @@ usermod -aG docker ${SUPERUSER}
 usermod -aG sshd ${SUPERUSER}
 usermod -aG sudo ${SUPERUSER}
 chmod 0700 /home/${SUPERUSER}/.
-echo ${SUPERPASSWORD} /root/.superpassword
+echo ${SUPERPASSWORD} > /root/.superpassword
 chown ${SUPERUSER}: /root/.superpassword
 chmod 0400 /root/.superpassword
 chmod o+x /root/.
