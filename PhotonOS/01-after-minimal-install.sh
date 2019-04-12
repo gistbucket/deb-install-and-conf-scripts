@@ -14,7 +14,7 @@ SUPERPASSWORD="" # if not define, a random password will be define 'openssl rand
 tdnf update -y
 
 ## basic tools
-tdnf install -y apparmor-profiles apparmor-utils cronie gawk git haveged iputils sudo
+tdnf install -y apparmor-profiles apparmor-utils cronie gawk git haveged iputils photon-upgrade sudo
 
 ## more entropy
 systemctl enable haveged
@@ -47,35 +47,29 @@ curl -o /home/${SUPERUSER}/.ssh/config -L https://gist.githubusercontent.com/jod
 curl -o /home/${SUPERUSER}/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R ${SUPERUSER}:users /var/srv/${SUPERUSER}/.ssh
 
-rm -Rf /root/.ssh
-
 ## config ssh daemon
 curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
-sed -i 's/AllowGroups ssh/AllowGroups sshd/g' /etc/ssh/sshd_config
+sed -i "s/AllowGroups ssh/AllowUsers ${SUPERUSER}/g" /etc/ssh/sshd_config
 systemctl restart sshd
+
+## deny direct root access
+rm -Rf /root/.ssh
+passwd --lock root
 
 ## config docker
 [[ ! -f /etc/docker/daemon.json ]] && \
 mkdir /etc/docker && \
 echo -e '{
-"data-root": "/var/srv/docker",
 "experimental": false,
 "live-restore": true,
-"no-new-privileges": false,
-"userns-remap": "dockremap"
+"no-new-privileges": false
 }' > /etc/docker/daemon.json
 
-[[ -n $(grep userns-remap /etc/docker/daemon.json) ]] && \
-[[ -z $(grep dockremap /etc/passwd) ]] && \
-groupadd -g 500 dockremap && \
-useradd -Mu 500 -g 500 -s /bin/false dockremap && \
-echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f3):65536 >> /etc/subuid && \
-echo dockremap:$(cat /etc/passwd|grep dockremap|cut -d: -f4):65536 >> /etc/subgid
-
 ## install docker-compose
-curl -L https://github.com/docker/compose/releases/download/$(curl -Ls https://www.servercow.de/docker-compose/latest.php)/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose
-chown root:docker /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
+DockerComposeVersion="$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | tail -n 1)"
+curl -L "https://github.com/docker/compose/releases/download/${DockerComposeVersion}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chown :docker /usr/local/bin/docker-compose
+chmod ug+x /usr/local/bin/docker-compose
 
 ## weekly autoupdate system + autoclean docker
 echo -e '
@@ -84,16 +78,14 @@ echo -e '
 ' > /var/spool/cron/root
 
 ## USUAL UMASK for SERVER and USER
-#sed 's|^UMASK.*|UMASK 022|g' -i /etc/login.defs
-#sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
+sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
 
 ## secure /var/tmp +tmpfs
 rm -Rf /{tmp,var/tmp}/{.*,*}
 echo -e "
 tmpfs /dev/shm tmpfs nodev,nosuid,noexec 0 0
 tmpfs /tmp tmpfs nodev,nosuid,size=512M 0 0
-/tmp /var/tmp none bind 0 0
-" >> /etc/fstab
+/tmp /var/tmp none bind 0 0" >> /etc/fstab
 
 ### tweak system for redis
 echo "kernel/mm/transparent_hugepage/enabled = never" > /etc/sysfs.conf
@@ -154,7 +146,6 @@ cp -f /etc/issue /etc/issue.net
 
 systemctl enable docker
 
-tdnf install -y photon-upgrade
 yes|photon-upgrade.sh
 
 echo -e "The password for ${SUPERUSER} is ${SUPERPASSWORD}.
