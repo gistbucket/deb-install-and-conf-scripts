@@ -2,48 +2,52 @@
 
 ##### ALL VARIABLES ARE OPTIONAL #####
 
+TZ=""
 SSHAUTHKey="" # warning copy your public here; if not mine will be!
 SUPERUSER="rescue" # you may want to replace rescue by your own username (will be member of: docker, ssh and sudo)
-IPext="$(curl https://ipinfo.io/ip)"
+SUPERPASSWORD="" # if not define, a random password will be define 'openssl rand -base64 64'
+#IPext="$(curl https://ipinfo.io/ip)"
 #WIP TZ="$(curl worldtimeapi.org/api/ip/${IPext}.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
-
 ##### END OF VARIABLES SECTION #####
 
 ## update
 tdnf update -y
 
-## install basic tools
-tdnf install -y apparmor-profiles apparmor-utils bindutils cronie gawk git haveged ipset iputils socat sudo tar unzip wget
+## basic tools
+tdnf install -y apparmor-profiles apparmor-utils cronie gawk git haveged iputils sudo
 
-## enable haveged
+## more entropy
 systemctl enable haveged
 systemctl restart haveged
 
 ## config timezone
-echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
-#WIP timedatectl set-timezone ${TZ}
+[[ -z ${TZ} ]] && \
+TZ="Europe/Berlin"
 timedatectl set-ntp 1
+timedatectl set-timezone ${TZ}
+echo "Servers=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" >> /etc/systemd/timesyncd.conf
 
 ## add user
-useradd -mu 1000 -G users -s /bin/bash -d /var/srv/${SUPERUSER} ${SUPERUSER}
+[[ -z ${SUPERPASSWORD} ]] && \
+SUPERPASSWORD=$(openssl rand -base64 64)
+HASHSUPERPASSWORD=$(openssl passwd -1 "${SUPERPASSWORD}")
+useradd -mu 1000 -G users -p ${HASHSUPERPASSWORD} -s /bin/bash ${SUPERUSER}
 usermod -aG docker ${SUPERUSER}
 usermod -aG sshd ${SUPERUSER}
 usermod -aG sudo ${SUPERUSER}
-
-chmod 700 /var/srv/${SUPERUSER}/.
-
-chown :docker /var/srv/.
-chmod g+w /var/srv/.
+chmod 0700 /home/${SUPERUSER}/.
+echo ${SUPERPASSWORD} /root/.superpassword
+chown ${SUPERUSER}: /root/.superpassword
+chmod 0400 /root/.superpassword
+chmod o+x /root/.
 
 ## config ssh client
-mkdir /var/srv/${SUPERUSER}/.ssh
-curl -o /var/srv/${SUPERUSER}/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
-curl -o /var/srv/${SUPERUSER}/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
+mkdir /home/${SUPERUSER}/.ssh
+curl -o /home/${SUPERUSER}/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+curl -o /home/${SUPERUSER}/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
 chown -R ${SUPERUSER}:users /var/srv/${SUPERUSER}/.ssh
 
-## config ssh client for root
-mkdir /root/.ssh
-curl -o /root/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
+rm -Rf /root/.ssh
 
 ## config ssh daemon
 curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
