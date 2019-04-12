@@ -2,6 +2,7 @@
 ## or execute directly: 'curl -sSL https://git.io/fjvTk|bash'
 
 ##### ALL VARIABLES ARE OPTIONAL #####
+DockerComposeVersion="1.24.0"
 
 TZ=""
 SSHAUTHKey="" # warning copy your public here; if not mine will be!
@@ -69,7 +70,7 @@ echo -e '{
 }' > /etc/docker/daemon.json
 
 ## install docker-compose
-DockerComposeVersion="$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | tail -n 1)"
+#DockerComposeVersion="$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP "[0-9]+\.[0-9][0-9]+\.[0-9]+$" | tail -n 1)"
 curl -L "https://github.com/docker/compose/releases/download/${DockerComposeVersion}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chown :docker /usr/local/bin/docker-compose
 chmod ug+x /usr/local/bin/docker-compose
