@@ -1,4 +1,5 @@
-## downloadable via curl -LO https://git.io/fjvTk
+## downloadable via 'curl -LO https://git.io/fjvTk'
+## or execute directly: 'curl -sSL https://git.io/fjvTk|bash'
 
 ##### ALL VARIABLES ARE OPTIONAL #####
 
