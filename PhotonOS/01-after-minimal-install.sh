@@ -45,7 +45,7 @@ chmod o+x /root/.
 mkdir /home/${SUPERUSER}/.ssh
 curl -o /home/${SUPERUSER}/.ssh/config -L https://gist.githubusercontent.com/jodumont/3fc790a4a4c2657d215a4db4bb0437af/raw/93f42921e436bfdff1b88c6570904b1383f7ddf6/.ssh_config
 curl -o /home/${SUPERUSER}/.ssh/authorized_keys -L https://gist.githubusercontent.com/jodumont/2fc29f7be085102c6a00ad9349c00f85/raw/c2f34df4590ce7d98a1e012e67ed3a489c90c78b/id_jodumont.pub
-chown -R ${SUPERUSER}:users /var/srv/${SUPERUSER}/.ssh
+chown -R ${SUPERUSER}:users /home/${SUPERUSER}/.ssh
 
 ## config ssh daemon
 curl -o /etc/ssh/sshd_config -L https://git.io/fhhzL
@@ -146,10 +146,4 @@ cp -f /etc/issue /etc/issue.net
 
 systemctl enable docker
 
-photon-upgrade.sh
-
-echo -e "The password for ${SUPERUSER} is ${SUPERPASSWORD}.
-it was saved in /root/.superpassword
-which accessible via 'cat /root/.superpassword' only from ${SUPERUSER}.
-Please reboot."
-
+yes|photon-upgrade.sh
