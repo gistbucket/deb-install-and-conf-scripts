@@ -2,6 +2,10 @@ curl -fsSLo /etc/resolv.conf https://raw.githubusercontent.com/jodumont/ConFig/m
 chattr +i /etc/resolv.conf
 
 echo -e "
+auto lo ens3
+iface lo inet loopback
+
+iface ens3 inet dhcp
 #iface ens3 inet static
 #  address /32
 #  gateway 172.31.1.1
