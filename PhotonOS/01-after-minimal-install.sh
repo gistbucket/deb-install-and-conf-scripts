@@ -84,6 +84,16 @@ echo -e '
 ## usual umask
 sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
 
+[[ -z $(grep /.*noatime /etc/fstab) ]] && \
+sed '/^[^#].*\/.*ext[2-4]/s/defaults,//g' -i /etc/fstab
+sed '/^[^#].*var.*ext[2-4]/s/defaults/nodev/g' -i /etc/fstab
+sed '/^[^#].*home.*ext[2-4]/s/defaults/nodev,noexec,nosuid/g' -i /etc/fstab
+
+[[ -n $(grep /.*noatime /etc/fstab) ]] && \
+sed '/^[^#].*\/.*ext[2-4]/s/defaults,//g' -i /etc/fstab
+sed '/^[^#].*var.*ext[2-4]/s/defaults/noatime,nodev/g' -i /etc/fstab
+sed '/^[^#].*home.*ext[2-4]/s/defaults/noatime,nodev,noexec,nosuid/g' -i /etc/fstab
+
 ## secure /var/tmp +tmpfs
 rm -Rf /{tmp,var/tmp}/{.*,*}
 echo -e "
