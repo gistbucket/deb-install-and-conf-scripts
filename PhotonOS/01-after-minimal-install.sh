@@ -82,7 +82,7 @@ echo -e '
 ' > /var/spool/cron/root
 
 ## usual umask
-sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
+sed 's|^umask.*|umask 022|g' -i /etc/profile
 
 [[ -z $(grep /.*noatime /etc/fstab) ]] && \
 sed '/^[^#].*\/.*ext[2-4]/s/defaults,//g' -i /etc/fstab
