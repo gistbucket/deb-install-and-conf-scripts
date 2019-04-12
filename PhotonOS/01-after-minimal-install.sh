@@ -146,8 +146,10 @@ cp -f /etc/issue /etc/issue.net
 
 systemctl enable docker
 
-yes|photon-upgrade.sh
+photon-upgrade.sh
 
 echo -e "The password for ${SUPERUSER} is ${SUPERPASSWORD}.
 it was saved in /root/.superpassword
-which accessible via 'cat /root/.superpassword' only from ${SUPERUSER}."
+which accessible via 'cat /root/.superpassword' only from ${SUPERUSER}.
+Please reboot."
+
