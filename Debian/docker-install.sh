@@ -5,7 +5,7 @@ sudo apt-get remove -y \
   docker docker-engine docker.io \
   runc
 
-sudo apt-get install \
+sudo apt-get install -y \
   apt-transport-https \
   ca-certificates curl \
   gnupg2 \
