@@ -1,5 +1,7 @@
 ### EN US UTF-8
 sed -i 's/^# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+export LANG="en_US.UTF-8"
+export LC_ALL="C"
 locale-gen
 
 apt remove --purge -y postfix
