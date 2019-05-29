@@ -8,6 +8,7 @@ cd /tmp
 git clone https://github.com/ddclient/ddclient.git
 cd /tmp/ddclient
 cp ddclient /usr/sbin/
+mkdir /etc/ddclient
 cp sample-etc_ddclient.conf /etc/ddclient/ddclient.conf
 
 # EDIT CONFIG -> /etc/ddclient/ddclient.conf
