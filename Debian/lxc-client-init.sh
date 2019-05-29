@@ -1,20 +1,7 @@
-apt update
-apt -o Dpkg::Options::="--force-confold" -y --force-yes install libtext-iconv-perl 
-
-                    
 [ "$(grep LC_ALL /etc/bash.bashrc)" ] || echo -e '
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8' >> /etc/bash.bashrc
-
-[ "$(grep LC_ALL /etc/environment)" ] || echo "LC_ALL=en_US.UTF-8" >> /etc/environment
-[ "$(grep LC_ALL /etc/locale.conf)" ] || echo "LANG=en_US.UTF-8" > /etc/locale.conf
-[ "$(grep LC_ALL /etc/locale.gen)" ] || echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-
-
-
-
-
+export LC_ALL=C' >> /etc/bash.bashrc
 
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
