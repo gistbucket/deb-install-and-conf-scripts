@@ -9,13 +9,18 @@ apt remove -y --purge amd64-microcode \
   firmware-qlogic \
   firmware-realtek \
   firmware-samsung firmware-siano \
-  firmware-ti-connectivity
+  firmware-ti-connectivity \
+  netcat
 
 ## install apparmor et cie
 apt install -y apparmor apparmor-profiles apparmor-utils \
+  bridge-utils \
   byobu \
   etckeeper \
-  git
+  git \
+  libvirt-daemon libvirt-daemon-system \
+  netcat-openbsd \
+  qemu-kvm qemu-system-arm qemu-system-x86
 
 apt upgrade -y
 
@@ -30,3 +35,5 @@ apt update
 sed 's|^\(GRUB_CMDLINE_LINUX_DEFAULT="quiet\)"$|\1 apparmor=1 security=apparmor cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5"|' -i /etc/default/grub
 
 update-grub
+
+reboot
