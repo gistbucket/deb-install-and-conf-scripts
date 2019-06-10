@@ -1,9 +1,10 @@
 [ "$(grep LC_ALL /etc/bash.bashrc)" ] || echo -e '
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=C' >> /etc/bash.bashrc
+export LANGUAGE="en_US:en"
+export LANG="en_US.UTF-8"
+export LC_ALL="C"
+' >> /etc/bash.bashrc
 
-export LANGUAGE=en_US.UTF-8
+export LANGUAGE=en_US:en
 export LANG=en_US.UTF-8
 export LC_ALL=C
 locale-gen en_US.UTF-8
