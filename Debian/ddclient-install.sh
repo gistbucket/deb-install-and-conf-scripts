@@ -1,7 +1,3 @@
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=C
-
 apt install -y git libdata-validate-ip-perl libjson-any-perl libio-socket-ssl-perl
 
 cd /tmp
