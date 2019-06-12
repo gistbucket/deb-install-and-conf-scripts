@@ -20,13 +20,4 @@ wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/t
 apt update
 apt install -y byobu debian-archive-keyring debian-goodies etckeeper fail2ban ipset pigz
 
-cat <<EOF | debconf-set-selections
-postfix postfix/mailname           string $(hostname -f)
-postfix postfix/chattr             boolean false
-postfix postfix/mailbox_limit      string 0
-postfix postfix/mynetworks         string 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-postfix postfix/recipient_delim    string +
-postfix postfix/rfc1035_violation  boolean false
-EOF
-
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' install proxmox-mailgateway
