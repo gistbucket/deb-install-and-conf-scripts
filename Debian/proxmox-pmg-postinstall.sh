@@ -5,12 +5,16 @@ export LC_ALL="C"
 
 echo -e "Acquire::ForceIPv4 \"true\";\\n" > /etc/apt/apt.conf.d/99force-ipv4
 
-cp /etc/apt/sources.list.d/pmg-enterprise.list /etc/apt/sources.list.d/pmg-community.list
-sed "s/^deb/#deb/g" -i /etc/apt/sources.list.d/pmg-enterprise.list
+[[ -f /etc/apt/sources.list.d/pmg-enterprise.list ]] && \
+cp /etc/apt/sources.list.d/pmg-enterprise.list /etc/apt/sources.list.d/pmg-community.list && \
+sed "s/^deb/#deb/g" -i /etc/apt/sources.list.d/pmg-enterprise.list && \
 sed -e "s/pve-enterprise/pve-no-subscription/g" \
     -e "s/enterprise./download./g" \
     -e "s/https:/http:/g" -i /etc/apt/sources.list.d/pmg-community.list
-sed -i "s/main contrib/main non-free contrib/g" /etc/apt/sources.list
+
+[[-z $(grep contrib /etc/apt/sources.list) ]] && \
+sed -e "s/ main/ main contrib/" \
+    -e "s/^deb-src/#deb-src/g" -i /etc/apt/sources.list
 
 apt-get update > /dev/null
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install byobu debian-archive-keyring fail2ban ipset pigz
