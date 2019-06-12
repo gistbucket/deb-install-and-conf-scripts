@@ -15,7 +15,7 @@ echo "deb http://download.proxmox.com/debian/ceph-luminous stretch main" > /etc/
 
 apt-get update
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' purge ntp openntpd chrony ksm-control-daemon
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install byobu curl debian-archive-keyring ksmtuned ipset nano pigz unzip wget zfsutils zip
+/usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install byobu curl debian-archive-keyring debian-goodies etckeeper ksmtuned ipset nano pigz unzip wget zfsutils zip
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' dist-upgrade
 pveam update
 
