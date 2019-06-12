@@ -45,16 +45,30 @@ PATH=/bin:\$PATH
 GZIP="-1"
 exec /usr/bin/pigz "\$@"
 EOF
+
 mv -f /bin/gzip /bin/gzip.original
 cp -f /bin/pigzwrapper /bin/gzip
 chmod +x /bin/pigzwrapper
 chmod +x /bin/gzip
+
+wget -O /etc/fail2ban/filter.d/postfix-pregreet.iredmail.conf https://bitbucket.org/zhb/iredmail/raw/default/iRedMail/samples/fail2ban/filter.d/postfix-pregreet.iredmail.conf
+
+cat <<EOF > /etc/fail2ban/filter.d/postfix-auth.conf
+[INCLUDES]
+before = common.conf
+
+[Definition]
+_daemon = postfix/smtpd
+failregex = ^%(__prefix_line)slost connection after .*\[<HOST>\]$
+ignoreregex =
+EOF
 
 cat <<EOF > /etc/fail2ban/filter.d/proxmox.conf
 [Definition]
 failregex = pvedaemon\[.*authentication failure; rhost=<HOST> user=.* msg=.*
 ignoreregex =
 EOF
+
 cat <<EOF > /etc/fail2ban/jail.d/proxmox.conf
 [proxmox]
 enabled = true
@@ -65,10 +79,33 @@ maxretry = 3
 # 1 hour
 bantime = 3600
 EOF
+
+cat <<EOF > /etc/fail2ban/jail.d/postfix-auth.conf
+[postfix-auth]
+enabled  = true
+port     = smtp,ssmtp,28,27
+filter   = postfix-auth
+action   = iptables[name=SMTP-auth, port=smtp, protocol=tcp]
+logpath  = /var/log/mail.info
+maxretry = 2
+bantime = 36000
+findtime = 300
+EOF
+
+cat <<EOF > /etc/fail2ban/jail.d/postfix-pregreet-iredmail.conf
+[postfix-pregreet-iredmail]
+enabled     = true
+filter      = postfix-pregreet.iredmail
+logpath     = /var/log/syslog
+maxretry    = 1
+action      = iptables-multiport[name=postfix, port="25", protocol=tcp]
+EOF
+
 cat <<EOF > /etc/fail2ban/jail.local
 [DEFAULT]
 banaction = iptables-ipset-proto4
 EOF
+
 systemctl enable fail2ban
 
 echo -e "
