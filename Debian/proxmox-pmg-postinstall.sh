@@ -12,7 +12,7 @@ sed -e "s/pve-enterprise/pve-no-subscription/g" \
     -e "s/enterprise./download./g" \
     -e "s/https:/http:/g" -i /etc/apt/sources.list.d/pmg-community.list
 
-[[-z $(grep contrib /etc/apt/sources.list) ]] && \
+[[ -z $(grep contrib /etc/apt/sources.list) ]] && \
 sed -e "s/ main/ main contrib/" \
     -e "s/^deb-src/#deb-src/g" -i /etc/apt/sources.list
 
@@ -77,13 +77,6 @@ vm.min_free_kbytes=524288
 fs.inotify.max_user_watches=1048576" >> /etc/sysctl.conf
 echo 1048576 > /proc/sys/fs/inotify/max_user_watches
 sysctl -p
-
-cat <<'EOF' > /etc/cron.daily/proxmox-nosub
-#!/bin/sh
-sed "s/data.status !== 'Active'/false/" -i /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
-EOF
-chmod 755 /etc/cron.daily/proxmox-nosub
-bash /etc/cron.daily/proxmox-nosub
 
 cat <<EOF >> /etc/security/limits.conf
 * soft     nproc          256000
