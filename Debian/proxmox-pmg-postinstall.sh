@@ -17,7 +17,7 @@ sed -e "s/ main/ main contrib/" \
     -e "s/^deb-src/#deb-src/g" -i /etc/apt/sources.list
 
 apt-get update > /dev/null
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install byobu debian-archive-keyring etckeeper fail2ban ipset pigz
+/usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install byobu debian-archive-keyring debian-goodies etckeeper fail2ban ipset pigz
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' dist-upgrade
 pmgupdate
 
