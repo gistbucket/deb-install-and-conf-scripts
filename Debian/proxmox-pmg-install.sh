@@ -21,7 +21,7 @@ apt update
 apt install -y byobu debian-archive-keyring debian-goodies etckeeper fail2ban ipset pigz
 
 cat <<EOF | debconf-set-selections
-postfix postfix/mailname           string /etc/mailname
+postfix postfix/mailname           string $(hostname -f)
 postfix postfix/chattr             boolean false
 postfix postfix/mailbox_limit      string 0
 postfix postfix/mynetworks         string 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
