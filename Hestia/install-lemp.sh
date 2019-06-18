@@ -16,3 +16,5 @@ bash hst-install.sh \
 
 ## ADD REDIS
 apt install -y git php-imagick php-smbclient php-redis redis-server
+
+see: https://github.com/hestiacp/hestiacp/issues/337#issuecomment-503344508
