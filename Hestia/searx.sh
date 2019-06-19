@@ -55,15 +55,18 @@ ln -s ../apps-available/searx.ini
 #}" > /home/$USER/conf/web/$DOMAIN.nginx.ssl.conf
 
 cd /home/$USER/web/$DOMAIN/public_html
+rm -Rf /home/$USER/web/$DOMAIN/public_html/*
+rm -Rf /home/$USER/web/$DOMAIN/public_html/.*
 git clone https://github.com/asciimoo/searx.git .
 useradd searx -d /home/$USER/web/$DOMAIN/public_html
 chown searx:searx -R /home/$USER/web/$DOMAIN/public_html/.
 
 sudo -u searx -i
-cd /home/$USER/web/$DOMAIN/public_html
+
 virtualenv searx-ve
 . ./searx-ve/bin/activate
 ./manage.sh update_packages
 
 sed -i -e "s/ultrasecretkey/`openssl rand -hex 16`/g" searx/settings.yml
 sed -i -e "s/debug : True/debug : False/g" searx/settings.yml
+exit
