@@ -20,7 +20,7 @@ apt install -y apparmor apparmor-profiles apparmor-utils \
   git \
   libvirt-daemon libvirt-daemon-system \
   netcat-openbsd \
-  qemu-kvm qemu-system-arm qemu-system-x86
+  qemu-kvm qemu-utils qemu-system-arm qemu-system-x86
 
 apt upgrade -y
 
