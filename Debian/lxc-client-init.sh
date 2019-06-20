@@ -16,6 +16,8 @@ force-confold
 force-confdef
 " >> /etc/dpkg/dpkg.cfg
 
+apt remove --purge x11* telnet traceroute tasksel* ssh reportbug rsyslog vim* xxd xz-utils xauth ucf wamerican ssl-cert mime-support man-db manpages openssh* openssl* bzip2 bash-completion bind9-host dbus dmidecode doc-debian cpp* fonts* cpio debian-faq groff* kmod
+
 apt update
 apt install -y libtext-iconv-perl
 apt dist-upgrade -y
