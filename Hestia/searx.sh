@@ -1,5 +1,5 @@
-USER=
-DOMAIN=
+sUSER=
+sDOMAIN=
 WORKERS=$(cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l)
 
 #ref: https://asciimoo.github.io/searx/dev/install/installation.html
@@ -31,35 +31,35 @@ enable-threads = true
 module = searx.webapp
 
 # Virtualenv and python path
-virtualenv = /home/$USER/web/$DOMAIN/public_html/searx-ve/
-pythonpath = /home/$USER/web/$DOMAIN/public_html/
-chdir = /home/$USER/web/$DOMAIN/public_html/searx/" > /etc/uwsgi/apps-available/searx.ini
+virtualenv = /home/$sUSER/web/$sDOMAIN/public_html/searx-ve/
+pythonpath = /home/$sUSER/web/$sDOMAIN/public_html/
+chdir = /home/$sUSER/web/$sDOMAIN/public_html/searx/" > /etc/uwsgi/apps-available/searx.ini
 
 cd /etc/uwsgi/apps-enabled
 ln -s ../apps-available/searx.ini
 
-#head -qn4 /home/$USER/conf/web/$DOMAIN.nginx.conf > /tmp/$DOMAIN.nginx.conf
+#head -qn4 /home/$sUSER/conf/web/$sDOMAIN.nginx.conf > /tmp/$sDOMAIN.nginx.conf
 #echo -e "
 #    location / {
 #            include uwsgi_params;
 #            uwsgi_pass unix:/run/uwsgi/app/searx/socket;
 #    }
-#}" > /home/$USER/conf/web/$DOMAIN.nginx.conf
+#}" > /home/$sUSER/conf/web/$sDOMAIN.nginx.conf
 
-#head -qn11 /home/$USER/conf/web/$DOMAIN.nginx.ssl.conf > /tmp/$DOMAIN.nginx.ssl.conf
+#head -qn11 /home/$sUSER/conf/web/$sDOMAIN.nginx.ssl.conf > /tmp/$sDOMAIN.nginx.ssl.conf
 #echo -e "
 #    location / {
 #            include uwsgi_params;
 #            uwsgi_pass unix:/run/uwsgi/app/searx/socket;
 #    }
-#}" > /home/$USER/conf/web/$DOMAIN.nginx.ssl.conf
+#}" > /home/$sUSER/conf/web/$sDOMAIN.nginx.ssl.conf
 
-cd /home/$USER/web/$DOMAIN/public_html
-rm -Rf /home/$USER/web/$DOMAIN/public_html/*
-rm -Rf /home/$USER/web/$DOMAIN/public_html/.*
+cd /home/$sUSER/web/$sDOMAIN/public_html
+rm -Rf /home/$sUSER/web/$sDOMAIN/public_html/*
+rm -Rf /home/$USER/web/$sDOMAIN/public_html/.*
 git clone https://github.com/asciimoo/searx.git .
-useradd searx -d /home/$USER/web/$DOMAIN/public_html
-chown searx:searx -R /home/$USER/web/$DOMAIN/public_html/.
+useradd searx -d /home/$sUSER/web/$sDOMAIN/public_html
+chown searx:searx -R /home/$sUSER/web/$sDOMAIN/public_html/.
 
 sudo -u searx -i
 
