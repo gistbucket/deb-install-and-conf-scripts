@@ -1,4 +1,0 @@
-# users/services are only able to read is own files
-
-sed 's|^UMASK.*|UMASK 027|g' -i /etc/login.defs
-sed 's|^UMASK.*|UMASK 027|g' -i /etc/profile

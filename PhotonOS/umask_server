@@ -1,4 +1,0 @@
-# most services on a server must share their files with others
-
-sed 's|^UMASK.*|UMASK 022|g' -i /etc/login.defs
-sed 's|^UMASK.*|UMASK 022|g' -i /etc/profile
