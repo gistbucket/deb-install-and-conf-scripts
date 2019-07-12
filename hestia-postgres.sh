@@ -17,8 +17,8 @@ wget -O /etc/postgresql/*/main/pg_hba.conf https://raw.githubusercontent.com/hes
 systemctl restart postgresql
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
-sed "s/^DB_SYSTEM=''/DB_SYSTEM='pgsql'/" -i /usr/local/hestia/conf/hestia.conf
 sed "s/^DB_SYSTEM='mysql'/DB_SYSTEM='mysql,pgsql'/" -i /usr/local/hestia/conf/hestia.conf
+sed "s/^DB_SYSTEM=''/DB_SYSTEM='pgsql'/" -i /usr/local/hestia/conf/hestia.conf
 
 /usr/local/hestia/bin/v-add-database-host pgsql localhost postgres $ppass
 systemctl restart hestia
