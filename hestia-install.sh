@@ -5,7 +5,7 @@ export LANGUAGE=en_US:en
 export LANG=en_US.UTF-8
 export LC_ALL=C
 
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install.sh
+wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh \
 -a no \
 -k no \
