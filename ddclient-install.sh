@@ -1,4 +1,4 @@
-apt install -y git libdata-validate-ip-perl libjson-any-perl libio-socket-ssl-perl
+apt install -y git libdata-validate-ip-perl libjson-any-perl libio-socket-ssl-perl net-tools
 
 cd /tmp
 git clone https://github.com/ddclient/ddclient.git
