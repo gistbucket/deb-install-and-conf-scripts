@@ -1,5 +1,3 @@
-#!/bin/bash
-
 sudo apt-get remove -y \
   containerd \
   docker docker-engine docker.io \
