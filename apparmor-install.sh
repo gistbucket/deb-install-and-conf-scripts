@@ -1,5 +1,3 @@
-#!/bin/bash
-
 apt update
 apt install -y apparmor apparmor-profiles apparmor-utils
 
