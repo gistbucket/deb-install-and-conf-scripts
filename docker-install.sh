@@ -9,7 +9,10 @@ sudo apt-get install -y \
   apt-transport-https \
   ca-certificates curl \
   gnupg2 \
-  software-properties-common
+  software-properties-common \
+  wget
+
+wget -O /etc/docker/daemon.json https://raw.githubusercontent.com/JOduMonT/config/master/etc/docker/daemon.json 
 
 curl -fsSL https://download.docker.com/linux/debian/gpg | \
   sudo apt-key add -
