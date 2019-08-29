@@ -1,5 +1,3 @@
-#!/bin/bash
-
 apt install -y arpon
 
 echo "
