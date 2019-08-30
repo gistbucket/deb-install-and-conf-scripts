@@ -4,7 +4,7 @@ apt dist-upgrade -y
 apt install -y \
     apt-listchanges apt-transport-https \
     ca-certificates coreutils curl \
-    debian-goodies debsums \
+    debian-goodies debsums dirmngr \
     gnupg \
     lsb-release \
     unattended-upgrades \
