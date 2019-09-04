@@ -21,11 +21,11 @@ echo -e "[user]
 apt install -y etckeeper php-imagick php-smbclient php-redis redis-server
 
 [[ -z $REDISPWD ]] && \
-REDISPWD=$(openssl rand --base64 24)
+#REDISPWD=$(openssl rand -base64 24)
 sed 's|^port.*|port 0|' -i /etc/redis/redis.conf
 sed 's|^# unixsocket .*|unixsocket /var/run/redis/redis.sock|' -i /etc/redis/redis.conf
 sed 's|^# unixsocketperm .*|unixsocketperm 770|' -i /etc/redis/redis.conf
-sed "s|^# requirepass .*|requirepass $REDISPWD|" -i /etc/redis/redis.conf
+#sed "s|^# requirepass .*|requirepass $REDISPWD|" -i /etc/redis/redis.conf
 
 for hUSER in $(grep hestia /etc/group|cut -d: -f4|sed 's/,/ /g'); do
 usermod -aG redis $hUSER; done
