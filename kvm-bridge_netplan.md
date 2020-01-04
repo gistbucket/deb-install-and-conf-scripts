@@ -1,7 +1,8 @@
-# How to configure a bridge with netplan for LibVirt / KVM / QEMU
-## works with ubuntu 18.04 LTS
+# How to configure a bridge with netplan for KVM / QEMU
 
-## edit /etc/netplan/network.yaml 
+## Works with ubuntu 18.04 LTS
+
+### edit /etc/netplan/network.yaml 
 
 > nano /etc/netplan/network.yaml 
 
@@ -26,7 +27,7 @@ network:
       dhcp6: no
 ```
 
-## edit /etc/libvirt/qemu/networks/br0.xml
+### edit /etc/libvirt/qemu/networks/br0.xml
 
 > virsh net-edit br0
 
@@ -38,7 +39,7 @@ network:
 </network>
 ```
 
-## be sure to configure NF (netfilter)
+### be sure to configure NF (netfilter)
 
 ```
 cat >> /etc/sysctl.conf <<EOF
