@@ -10,11 +10,12 @@ sudo apt-get install -y \
   software-properties-common \
   wget
 
-wget -O /etc/docker/daemon.json https://raw.githubusercontent.com/JOduMonT/config/master/etc/docker/daemon.json 
-
 curl -fsSL https://download.docker.com/linux/debian/gpg | \
   sudo apt-key add -
 
+# if Ubuntu == $(lsb_release -i|cut -d\: -f2)
+# else OS= :-debian
+#echo "deb [arch=amd64] https://download.docker.com/linux/${OS} $(lsb_release -cs) stable" | \
 echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list
 
