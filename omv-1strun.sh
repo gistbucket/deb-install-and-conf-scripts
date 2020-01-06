@@ -1,3 +1,7 @@
+#!/bin/bash -eux
+
+rm /var/cache/apt/archives/lock
+
 apt remove -y --purge amd64-microcode \
   firmware-amd-graphics firmware-atheros \
   firmware-bnx2 firmware-bnx2x firmware-brcm80211 \
@@ -31,8 +35,10 @@ wget -O /usr/lib/python3.5/weakref.py https://raw.githubusercontent.com/python/c
 wget -O - http://omv-extras.org/install | bash
 
 apt update
+apt upgrade -y
 
-sed 's|^\(GRUB_CMDLINE_LINUX_DEFAULT="quiet\)"$|\1 apparmor=1 security=apparmor cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5"|' -i /etc/default/grub
+[[ -z cat /proc/cpuinfo|grep endor|grep ntel ]] && \
+  sed 's|^\(GRUB_CMDLINE_LINUX_DEFAULT="quiet\)"$|\1 intel_iommu=on apparmor=1 security=apparmor cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5"|' -i /etc/default/grub
 
 update-grub
 
