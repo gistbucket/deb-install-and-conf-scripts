@@ -11,7 +11,6 @@ sed -e "s/pve-enterprise/pve-no-subscription/g" \
     -e "s/enterprise./download./g" \
     -e "s/https:/http:/g" -i /etc/apt/sources.list.d/pve-community.list
 sed "s/main contrib/main non-free contrib/g" -i /etc/apt/sources.list
-#echo "deb http://download.proxmox.com/debian/ceph-luminous stretch main" > /etc/apt/sources.list.d/ceph.list
 
 apt-get update
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' purge ntp openntpd chrony ksm-control-daemon
@@ -21,8 +20,6 @@ pveam update
 
 systemctl enable ksmtuned
 systemctl enable ksm
-
-#echo "Y" | pveceph install
 
 if [ "$(grep -i -m 1 "model name" /proc/cpuinfo | grep -i "EPYC")" != "" ]; then
   if ! grep "GRUB_CMDLINE_LINUX_DEFAULT" /etc/default/grub | grep -q "idle=nomwait" ; then
@@ -35,26 +32,6 @@ fi
 [[ "$(grep -i -m 1 "model name" /proc/cpuinfo | grep -i "EPYC")" != "" ]] || [[ "$(grep -i -m 1 "model name" /proc/cpuinfo | grep -i "Ryzen")" != "" ]] && \
   echo "options kvm ignore_msrs=Y" >> /etc/modprobe.d/kvm.conf && \
   echo "options kvm report_ignored_msrs=N" >> /etc/modprobe.d/kvm.conf
-
-echo "kexec-tools kexec-tools/load_kexec boolean false" | debconf-set-selections
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install kexec-tools
-
-cat <<'EOF' > /etc/systemd/system/kexec-pve.service
-[Unit]
-Description=boot into into the latest pve kernel set as primary in the boot-loader
-Documentation=man:kexec(8)
-DefaultDependencies=no
-Before=shutdown.target umount.target final.target
-
-[Service]
-Type=oneshot
-ExecStart=/sbin/kexec -l /boot/pve/vmlinuz --initrd=/boot/pve/initrd.img --reuse-cmdline
-
-[Install]
-WantedBy=kexec.target
-EOF
-systemctl enable kexec-pve.service
-echo "alias reboot-quick='systemctl kexec'" >> /root/.bash_profile
 
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' autoremove
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' autoclean
@@ -158,22 +135,34 @@ echo 'session required pam_limits.so' | tee -a /etc/pam.d/runuser-l
 
 cd ~ && echo "ulimit -n 256000" >> .bashrc ; echo "ulimit -n 256000" >> .profile
 
-if [ "$(command -v zfs)" != "" ] ; then
-	RAM_SIZE_GB=$(( $(vmstat -s | grep -i "total memory" | xargs | cut -d" " -f 1) / 1024 / 1000))
-	if [[ RAM_SIZE_GB -lt 16 ]] ; then
-		# 1GB/1GB
-		MY_ZFS_ARC_MIN=1073741824
-		MY_ZFS_ARC_MAX=1073741824
-	else
-		MY_ZFS_ARC_MIN=$((RAM_SIZE_GB * 1073741824 / 16))
-	  MY_ZFS_ARC_MAX=$((RAM_SIZE_GB * 1073741824 / 8))
-	fi
-	cat <<EOF > /etc/modprobe.d/zfs.conf
-options zfs zfs_arc_min=$MY_ZFS_ARC_MIN
-options zfs zfs_arc_max=$MY_ZFS_ARC_MAX
-options zfs l2arc_noprefetch=0
-options zfs l2arc_write_max=524288000
-EOF
-fi
+# IF less than 16GB RAM
+# MY_ZFS_ARC_MIN=1073741824
+# MY_ZFS_ARC_MAX=1073741824
+# IF more than 16GB RAM
+# MY_ZFS_ARC_MIN=RAM_in_GB / 16 * 1073741824
+# MY_ZFS_ARC_MAX=RAM_in_GB / 8 * 1073741824
+#
+# nano /etc/modprobe.d/zfs.conf
+#options zfs zfs_arc_min=$MY_ZFS_ARC_MIN
+#options zfs zfs_arc_max=$MY_ZFS_ARC_MAX
+#options zfs l2arc_noprefetch=0
+#options zfs l2arc_write_max=524288000
 
 update-initramfs -u -k all
+
+# IOMMU
+# add {amd|intel}_iommu=on @ /etc/kernel/cmdline
+# exec pve-efiboot-tool refresh
+
+cat <<EOF > /etc/modules
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+
+loop
+virtio
+9p
+9pnet
+9pnet_virtio
+EOF
