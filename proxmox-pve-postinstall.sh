@@ -11,7 +11,7 @@ sed -e "s/pve-enterprise/pve-no-subscription/g" \
     -e "s/enterprise./download./g" \
     -e "s/https:/http:/g" -i /etc/apt/sources.list.d/pve-community.list
 sed "s/main contrib/main non-free contrib/g" -i /etc/apt/sources.list
-echo "deb http://download.proxmox.com/debian/ceph-luminous stretch main" > /etc/apt/sources.list.d/ceph.list
+#echo "deb http://download.proxmox.com/debian/ceph-luminous stretch main" > /etc/apt/sources.list.d/ceph.list
 
 apt-get update
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' purge ntp openntpd chrony ksm-control-daemon
