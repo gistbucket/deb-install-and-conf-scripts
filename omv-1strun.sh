@@ -36,7 +36,7 @@ apt install -y apparmor apparmor-profiles apparmor-utils \
 apt upgrade -y
 
 [[ -z cat /proc/cpuinfo|grep endor|grep ntel ]] && \
-  sed 's|^\(GRUB_CMDLINE_LINUX_DEFAULT="\)"$|\1 intel_iommu=on apparmor=1 security=apparmor cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5"|' -i /etc/default/grub
+  sed 's|^\(GRUB_CMDLINE_LINUX_DEFAULT="\)"$|\1 intel_iommu=on apparmor=1 security=apparmor cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5 loglevel=5"|' -i /etc/default/grub
 
 update-grub
 
