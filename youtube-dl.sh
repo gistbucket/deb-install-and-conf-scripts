@@ -7,7 +7,7 @@
 # Tested with: Debian and Ubuntu
 
 ## install requirement
-apt install -y \
+sudo apt install -y \
   ffmpeg
 
 ## if don't exist, download
