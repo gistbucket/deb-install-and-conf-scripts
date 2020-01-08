@@ -6,6 +6,7 @@ cd /tmp/ddclient
 cp ddclient /usr/sbin/
 mkdir /etc/ddclient /var/cache/ddclient
 cp sample-etc_ddclient.conf /etc/ddclient/ddclient.conf
+sed -i '/^#.*web=checkip.dyndns.org.*/s/^#//' /etc/ddclient/ddclient.conf
 
 # EDIT CONFIG -> /etc/ddclient/ddclient.conf
 
