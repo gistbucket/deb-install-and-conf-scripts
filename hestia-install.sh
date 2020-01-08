@@ -1,15 +1,18 @@
-PASSWORD=
-REDISPWD=
+PASSWORD=$(< /dev/urandom tr -dc @.,/=_A-Z-a-z-0-9 | head -c24)
+REDISPWD=$(< /dev/urandom tr -dc @.,/=_A-Z-a-z-0-9 | head -c24)
 
-export LANGUAGE=en_US:en
-export LANG=en_US.UTF-8
-export LC_ALL=C
-
+apt -y remove --purge ufw postfix
+#rm /etc/apt/apt.conf.d/01-vendor-ubuntu
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 bash hst-install.sh \
 -a no \
+-f -y no \
+-g yes \
 -k no \
+-v no \
 -w yes -o yes \
+-x no -z no \
+-c no -t no \
 -s $(hostname -s).$(hostname -d) \
 -e hostmaster@$(hostname -d) \
 -p $PASSWORD
