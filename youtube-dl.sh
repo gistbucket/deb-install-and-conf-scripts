@@ -2,9 +2,13 @@
 # -e If non interactive then exit immediately if a command fails.
 # -u Treat unset variables as an error when substituting.
 
-# Stage: 5 Production
+# Status: 4 Beta
 # Requirement:
 # Tested with: Debian and Ubuntu
+
+## install requirement
+apt install -y \
+  ffmpeg
 
 ## if don't exist, download
 [[ ! -f /usr/local/bin/youtube-dl ]] && \
