@@ -30,7 +30,7 @@ apt install -y apparmor apparmor-profiles apparmor-utils \
   git \
   libvirt-daemon libvirt-daemon-system \
   netcat-openbsd \
-  openmediavault-backup openmediavault-clamav openmediavault-diskstats openmediavault-fail2ban openmediavault-locate openmediavault-luksencryption openmediavault-resetperms openmediavault-usbbackup openmediavault-ups \
+  openmediavault-backup openmediavault-clamav openmediavault-diskstats openmediavault-fail2ban openmediavault-locate openmediavault-luksencryption openmediavault-nut openmediavault-resetperms openmediavault-usbbackup \
   powertop \
   qemu-kvm qemu-utils qemu-system-arm qemu-system-x86
 
