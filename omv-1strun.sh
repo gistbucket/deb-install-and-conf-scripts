@@ -8,7 +8,7 @@ wget -O - http://omv-extras.org/install | bash
 
 ## remove firmware
 rm /var/cache/apt/archives/lock
-apt remove -y --purge amd64-microcode \
+apt purge amd64-microcode \
   firmware-amd-graphics firmware-atheros \
   firmware-bnx2 firmware-bnx2x firmware-brcm80211 \
   firmware-cavium \
