@@ -25,6 +25,7 @@ apt install -y \
     debian-goodies debsums \
     gnupg \
     lsb-release \
+    net-tools \
     unattended-upgrades \
     wget
 
