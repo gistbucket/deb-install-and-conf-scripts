@@ -57,6 +57,6 @@ apt-get --assume-yes autoremove
 
 rm /var/lib/dbus/machine-id
 rm -rf ~/.bash_history /tmp/* /var/tmp/*
-reboot 2
+shutdown
 history -c
 history -w
