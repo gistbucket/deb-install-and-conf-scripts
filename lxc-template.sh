@@ -3,14 +3,17 @@ cat <<EOF >> /etc/bash.bashrc
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export LANGUAGE="en_US:en"
 export LANG="en_US.UTF-8"
-export LC_ALL="C"
+export LC_ALL="en_US.UTF-8"
 EOF
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export LANGUAGE=en_US:en
-export LANG=en_US.UTF-8
-export LC_ALL=C
 locale-gen en_US.UTF-8
+localedef -i en_US -f UTF-8 en_US.UTF-8
+
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+locale-gen en_US.UTF-8
+dpkg-reconfigure locales
 
 [[ "$(grep force- /etc/dpkg/dpkg.cfg)" ]]  && \
 cat <<EOF >> /etc/dpkg/dpkg.cfg
