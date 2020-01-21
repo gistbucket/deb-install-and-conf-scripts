@@ -1,5 +1,5 @@
 
-apt remove --purge -y \
+apt purge -y \
   btrfs-progs btrfs-tools \
   cryptsetup cryptsetup-bin \
   dmsetup \
