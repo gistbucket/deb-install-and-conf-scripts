@@ -49,3 +49,13 @@ EOF
 
 service systemd-timesyncd start
 timedatectl set-ntp true
+
+apt-get update
+apt-get --assume-yes --with-new-pkgs upgrade
+apt-get --assume-yes clean
+apt-get --assume-yes autoremove
+
+history -w
+history -c
+rm -rf /tmp/* ~/.bash_history /var/tmp/*
+rm /var/lib/dbus/machine-id
