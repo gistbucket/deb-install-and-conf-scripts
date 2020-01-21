@@ -1,9 +1,10 @@
-[ "$(grep LC_ALL /etc/bash.bashrc)" ] || echo -e '
+[[ "$(grep LC_ALL /etc/bash.bashrc)" ]] && \
+cat <<EOF >> /etc/bash.bashrc
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export LANGUAGE="en_US:en"
 export LANG="en_US.UTF-8"
 export LC_ALL="C"
-' >> /etc/bash.bashrc
+EOF
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export LANGUAGE=en_US:en
@@ -11,10 +12,11 @@ export LANG=en_US.UTF-8
 export LC_ALL=C
 locale-gen en_US.UTF-8
 
-[ "$(grep force- /etc/dpkg/dpkg.cfg)" ] || echo -e "
+[[ "$(grep force- /etc/dpkg/dpkg.cfg)" ]]  && \
+cat <<EOF >> /etc/dpkg/dpkg.cfg
 force-confold
 force-confdef
-" >> /etc/dpkg/dpkg.cfg
+EOF
 
 apt update
 apt install -y libtext-iconv-perl
