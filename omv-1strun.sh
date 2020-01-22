@@ -1,5 +1,7 @@
 #!/bin/bash -eux
 
+KVM="" # expect yes
+
 ## fix the weakref.py error
 wget -O /usr/lib/python3.5/weakref.py https://raw.githubusercontent.com/python/cpython/9cd7e17640a49635d1c1f8c2989578a8fc2c1de6/Lib/weakref.py
 
@@ -24,12 +26,16 @@ apt purge amd64-microcode \
 
 ## install apparmor et cie
 apt install -y apparmor apparmor-profiles apparmor-utils \
-  bridge-utils byobu \
+  byobu \
   etckeeper \
   git \
   libvirt-daemon libvirt-daemon-system \
+  openmediavault-backup openmediavault-clamav openmediavault-diskstats openmediavault-fail2ban openmediavault-locate openmediavault-luksencryption openmediavault-nut openmediavault-resetperms openmediavault-usbbackup
+
+## install KVM
+[[ $KVM == 'yes' ]] && \
+apt install -y bridge-utils \
   netcat-openbsd \
-  openmediavault-backup openmediavault-clamav openmediavault-diskstats openmediavault-fail2ban openmediavault-locate openmediavault-luksencryption openmediavault-nut openmediavault-resetperms openmediavault-usbbackup \
   qemu-kvm qemu-utils qemu-system-arm qemu-system-x86
 
 apt upgrade -y
