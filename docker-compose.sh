@@ -3,3 +3,7 @@ DockerComposeVersion="$(git ls-remote https://github.com/docker/compose | grep r
 curl -L "https://github.com/docker/compose/releases/download/${DockerComposeVersion}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chown :docker /usr/local/bin/docker-compose
 chmod 750 /usr/local/bin/docker-compose
+
+#apt install -y python3-pip
+#pip3 install --upgrade pip
+#pip3 install docker-compose
