@@ -30,8 +30,8 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | \
 
 # if Ubuntu == $(lsb_release -i|cut -d\: -f2)
 # else OS= :-debian
-#echo "deb [arch=amd64] https://download.docker.com/linux/${OS} $(lsb_release -cs) stable" | \
-echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | \
+#echo "deb https://download.docker.com/linux/${OS} $(lsb_release -cs) stable" | \
+echo "deb https://download.docker.com/linux/debian $(lsb_release -cs) stable" | \
   tee /etc/apt/sources.list.d/docker.list
 
 apt update
