@@ -1,6 +1,20 @@
 PASSWORD=$(< /dev/urandom tr -dc @.,/=_A-Z-a-z-0-9 | head -c24)
 REDISPWD=$(< /dev/urandom tr -dc @.,/=_A-Z-a-z-0-9 | head -c24)
 
+[ "$(grep LC_ALL /etc/bash.bashrc)" ] && \
+cat <<EOF >> /etc/bash.bashrc
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export LANGUAGE="en_US:en"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+EOF
+
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export LANGUAGE=en_US:en
+export LANG=en_US.UTF-8
+export LC_ALL=C
+locale-gen en_US.UTF-8
+
 apt -y remove --purge ufw postfix
 #rm /etc/apt/apt.conf.d/01-vendor-ubuntu
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
