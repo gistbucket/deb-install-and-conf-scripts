@@ -35,7 +35,7 @@ echo -e "[user]
         name = $(hostname -s)
         email = hostmaster@$(hostname -d)" > /root/.gitconfig
 
-apt install -y etckeeper php7.2-gmp php-imagick php-smbclient php-redis redis-server
+apt install -y curl etckeeper php7.2-gmp php-imagick php-smbclient php-redis redis-server wget
 
 [[ -z $REDISPWD ]] && \
 #REDISPWD=$(openssl rand -base64 24)
