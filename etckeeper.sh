@@ -14,7 +14,7 @@ wget -O /etc/.github/ISSUE_TEMPLATE/feature_request.md https://raw.githubusercon
 
 cd /etc
 etckeeper init
-etckeeper add -A
+etckeeper add /etc/.github/ISSUE_TEMPLATE/*
 etckeeper commit -m "init"
 git remote add origin ${PRIVATEREPO}
 git push -u origin master
