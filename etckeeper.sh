@@ -9,6 +9,8 @@ sed -i "s/^VCS=.*/VCS=\"git\"/" /etc/etckeeper/etckeeper.conf
 sed -i "s/^PUSH_REMOTE=.*/PUSH_REMOTE=\"origin\"/" /etc/etckeeper/etckeeper.conf
 
 cd /etc
+etckeeper init
+etckeeper commit -m "init"
 git remote add origin ${PRIVATEREPO}
 git push -u origin master
 exit
