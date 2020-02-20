@@ -1,19 +1,19 @@
 #!/bin/bash -eux
 
-OS=$(lsb_release -s -i)
-VERSION=$(lsb_release -s -c)
+OSNAME=$(lsb_release -s -i)
+OSVERSION=$(lsb_release -s -c)
 
 ## ADAPTA THEME
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys EAC0D406E5D79A82ADEEDFDFB76E53652D87398A
-echo "deb http://ppa.launchpad.net/tista/adapta/${OS,,} $VERSION main" > /etc/apt/sources.list.d/adapta.list
+echo "deb http://ppa.launchpad.net/tista/adapta/${OSNAME,,} $OSVERSION main" > /etc/apt/sources.list.d/adapta.list
 
 ## DEB MULTIMEDIA
 wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb && dpkg -i deb-multimedia-keyring_2016.8.1_all.deb
-echo "deb [arch=amd64] https://www.deb-multimedia.org $VERSION main non-free" > /etc/apt/sources.list.d/deb-multimedia.list
+echo "deb [arch=amd64] https://www.deb-multimedia.org $OSVERSION main non-free" > /etc/apt/sources.list.d/deb-multimedia.list
 
 ## DOCKER
-curl -fsSL https://download.docker.com/linux/${OS,,}/gpg | apt-key add -
-echo "deb [arch=amd64] https://download.docker.com/linux/${OS,,} $VERSION stable" > /etc/apt/sources.list.d/docker.list
+curl -fsSL https://download.docker.com/linux/${OSNAME,,}/gpg | apt-key add -
+echo "deb [arch=amd64] https://download.docker.com/linux/${OSNAME,,} $OSVERSION stable" > /etc/apt/sources.list.d/docker.list
 
 ## GOOGLE
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -21,23 +21,23 @@ echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /et
 
 ## MARIADB
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C80E383C3DE9F082E01391A0366C67DE91CA5D5F
-echo "deb [arch=amd64] http://mirror.23media.de/mariadb/repo/10.2/${OS,,} $VERSION main" > /etc/apt/sources.list.d/mariadb.list
+echo "deb [arch=amd64] http://mirror.23media.de/mariadb/repo/10.2/${OSNAME,,} $OSVERSION main" > /etc/apt/sources.list.d/mariadb.list
 
 ### NGINX
 wget https://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
-echo "deb [arch=amd64] http://nginx.org/packages/${OS,,} $VERSION nginx" > /etc/apt/sources.list.d/nginx.list
+echo "deb [arch=amd64] http://nginx.org/packages/${OSNAME,,} $OSVERSION nginx" > /etc/apt/sources.list.d/nginx.list
 
 ## NODEJS
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
-echo "deb https://deb.nodesource.com/node_12.x $VERSION main" > /etc/apt/sources.list.d/nodejs.list
+echo "deb https://deb.nodesource.com/node_12.x $OSVERSION main" > /etc/apt/sources.list.d/nodejs.list
 
 ## PHP
 wget -q -O- https://packages.sury.org/php/apt.gpg | apt-key add -
-echo "deb https://packages.sury.org/php/ $VERSION main" > /etc/apt/sources.list.d/php.list
+echo "deb https://packages.sury.org/php/ $OSVERSION main" > /etc/apt/sources.list.d/php.list
 
 ## POSTGRESQL
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-echo "deb http://apt.postgresql.org/pub/repos/apt/ $VERSION-pgdg main" > /etc/apt/sources.list.d/postgres.list
+echo "deb http://apt.postgresql.org/pub/repos/apt/ $OSVERSION-pgdg main" > /etc/apt/sources.list.d/postgres.list
 
 ## SKYPE
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 1F3045A5DF7587C3
