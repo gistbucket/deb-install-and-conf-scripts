@@ -11,9 +11,15 @@ export LANG=en_US.UTF-8
 export LC_ALL=C
 locale-gen en_US.UTF-8
 
+curl -fsSL https://download.docker.com/linux/debian/gpg | \
+  apt-key add -
+
+echo "deb https://download.docker.com/linux/$(lsb_release -is) $(lsb_release -cs) stable" | \
+  tee /etc/apt/sources.list.d/docker.list
+
 apt update
 
-apt-get remove -y \
+apt-get purge -y \
   containerd \
   docker docker-engine docker.io \
   runc
@@ -25,20 +31,9 @@ apt-get install -y \
   software-properties-common \
   wget
 
-curl -fsSL https://download.docker.com/linux/debian/gpg | \
-  apt-key add -
-
-# if Ubuntu == $(lsb_release -i|cut -d\: -f2)
-# else OS= :-debian
-#echo "deb https://download.docker.com/linux/${OS} $(lsb_release -cs) stable" | \
-echo "deb https://download.docker.com/linux/debian $(lsb_release -cs) stable" | \
-  tee /etc/apt/sources.list.d/docker.list
-
-apt update
-
 apt-get install -y \
   containerd.io \
   docker-ce docker-ce-cli
 
-apt remove --purge -y \
+apt purge -y \
   aufs*
