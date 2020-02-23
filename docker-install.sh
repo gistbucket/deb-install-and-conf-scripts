@@ -11,7 +11,9 @@ export LANG=en_US.UTF-8
 export LC_ALL=C
 locale-gen en_US.UTF-8
 
-curl -fsSL https://download.docker.com/linux/debian/gpg | \
+apt install -y lsb-release
+
+curl -fsSL https://download.docker.com/linux/$(lsb_release -is)/gpg | \
   apt-key add -
 
 echo "deb https://download.docker.com/linux/$(lsb_release -is) $(lsb_release -cs) stable" | \
