@@ -1,0 +1,6 @@
+echo -e "## http://www.brendangregg.com/blog/2015-03-03/performance-tuning-linux-instances-on-ec2.html
+vm.overcommit_memory=1
+vm.dirty_ratio=80
+vm.dirty_background_ratio=5
+vm.dirty_expire_centisecs=12000" > /etc/sysctl.d/vm.conf
+systemctl restart systemd-sysctl
