@@ -14,5 +14,3 @@ iface ens3 inet dhcp
 #iface ens3 inet6 static
 #  address /64
 #  gateway fe80::1" >> /etc/network/interface
-
-nano /etc/network/interface
