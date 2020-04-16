@@ -30,9 +30,7 @@ export DEBIAN_FRONTEND=noninteractive
 APT="apt-get --assume-yes"
 
 ## Set timezone
-IPext="$(curl -s ifconfig.io/ip)" # ref: https://ifconfig.io
-TimeZone="$(curl -s worldtimeapi.org/api/ip/$IPext.txt|grep timezone|cut -d' ' -f2)" # ref: http://worldtimeapi.org
-timedatectl set-timezone $TimeZone
+timedatectl set-timezone $(curl -s worldtimeapi.org/api/ip/$(curl -s ifconfig.me/ip)|cut -d\" -f16)
 
 ## Install etckeeper
 if [ ! -f $HOME/packages.installed ]; then
