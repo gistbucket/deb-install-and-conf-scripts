@@ -1,0 +1,2 @@
+sed -i '/floppy/d' /etc/fstab
+sed -i '/sr/d' /etc/fstab
