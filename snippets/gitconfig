@@ -1,0 +1,3 @@
+echo -e "[user]
+  name = $USER
+  email = $USER@$(hostname -f)" > .gitconfig
