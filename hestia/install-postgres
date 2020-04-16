@@ -1,6 +1,5 @@
 # ref: https://github.com/hestiacp/hestiacp/blob/master/install/hst-install-debian.sh#L1416
 
-# Defining password-gen function
 gen_pass() {
     MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     LENGTH=16
