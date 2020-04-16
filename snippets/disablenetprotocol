@@ -1,0 +1,8 @@
+DISABLENET='/etc/modprobe.d/disablenet.conf'
+NET="dccp sctp rds tipc"
+
+for disable in $NET; do
+if ! grep -q "$disable" "$DISABLENET" 2> /dev/null; then
+    echo "install $disable /bin/true" >> "$DISABLENET"
+fi
+done
