@@ -1,6 +1,3 @@
-#!/bin/bash -eux
-
-## VARIABLES
 PRIVATEREPO="" # git@github.com:GitUser/etc-host.domain.tld.git
 
 apt install -y etckeeper
