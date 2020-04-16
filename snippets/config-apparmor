@@ -1,0 +1,7 @@
+if [ $(systemd-detect-virt) != "lxc" ];
+  [[ $(grep GRUB_CMDLINE_LINUX /etc/default/grub) != *"apparmor"* ]] && \
+    sed -e 's/^GRUB_CMDLINE_LINUX="\(.*\)"$/GRUB_CMDLINE_LINUX="\1 apparmor=1 security=apparmor"/' -i /etc/default/grub
+  [[ $(grep GRUB_CMDLINE_LINUX /etc/default/grub) != *"cgroup_enable"* ]] && \
+    sed -e 's/^GRUB_CMDLINE_LINUX="\(.*\)"$/GRUB_CMDLINE_LINUX="\1 cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5"/' -i /etc/default/grub
+  grub-update
+fi
