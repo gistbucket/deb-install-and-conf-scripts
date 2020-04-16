@@ -1,1 +1,2 @@
 apt list --installed > $HOME/preinstalled.packages
+apt update
