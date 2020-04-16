@@ -1,6 +1,3 @@
-#!/bin/bash -eu
-
-### VARIABLES
 apps="jackett, lidarr, sonarr, radarr"
 appsFolder="/opt"
 dataFolder="/srv"
@@ -24,32 +21,12 @@ source .env
 echo "Sorry your OS is not supported." && \
 exit 0
 
-### LOCALE US UTF-8
-locale-gen en_US.UTF-8
-update-locale en_US.UTF-8
-
-### TIMEZONE
-[[ -z $TZ ]] && \
-TZ="UTC"
-timedatectl set-timezone $TZ
-timedatectl set-ntp 1
-
-## CLEAN
-apt autoremove --purge -y
-apt install -y --no-install-recommends apparmor apparmor-profiles apparmor-profiles-extra apparmor-utils arpon byobu haveged
-if [ $(systemd-detect-virt) != "lxc" ];
-    ### APPARMOR
-    [[ $(grep GRUB_CMDLINE_LINUX /etc/default/grub) != *"apparmor"* ]] && \
-        sed -e 's/^GRUB_CMDLINE_LINUX="\(.*\)"$/GRUB_CMDLINE_LINUX="\1 apparmor=1 security=apparmor"/' -i /etc/default/grub
-
-    ### CGROUP
-    [[ $(grep GRUB_CMDLINE_LINUX /etc/default/grub) != *"cgroup_enable"* ]] && \
-        sed -e 's/^GRUB_CMDLINE_LINUX="\(.*\)"$/GRUB_CMDLINE_LINUX="\1 cgroup_enable=memory swapaccount=1 panic_on_oops=1 panic=5"/' -i /etc/default/grub
-    grub-update
-fi
+for SNIPPET in config-localus set-timezone; do
+  bash <(curl -sk https://raw.githubusercontent.com/JOduMonT/DEB/master/snippets/$SNIPPET)
+done
 
 ### TOOLS
-apt install -y --no-install-recommends acl apt-listchanges apt-transport-https bzip2 ca-certificates chrony coreutils curl debsums dirmngr gnupg iptables ipset net-tools sudo sysfsutils unattended-upgrades unzip wget
+apt install -y acl apt-listchanges apt-transport-https bzip2 ca-certificates chrony coreutils curl debsums dirmngr gnupg iptables ipset net-tools sudo sysfsutils unattended-upgrades unzip wget
 
 ### SOURCE
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
@@ -59,7 +36,7 @@ echo "deb https://mediaarea.net/repo/deb/$OS $DISTRO main" | tee /etc/apt/source
 apt update
 
 ## INSTALL
-apt-get install -y --no-install-recommends ca-certificates-mono libcurl4-openssl-dev jq mediainfo mono-devel mono-vbnc python sqlite3
+apt-get install -y ca-certificates-mono libcurl4-openssl-dev jq mediainfo mono-devel mono-vbnc python sqlite3
 
 groupadd -g multimedia
 
