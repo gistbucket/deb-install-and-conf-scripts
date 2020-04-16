@@ -1,0 +1,8 @@
+mkdir /etc/docker
+echo -e '{
+  "data-root": "/home/docker",
+  "dns": ["1.1.1.1", "1.0.0.1"],
+  "experimental": false,
+  "log-driver": "journald",
+  "no-new-privileges": false
+}' > /etc/docker/daemon.json
