@@ -1,0 +1,13 @@
+sed 's|//      "${distro_id}:${distro_codename}-security";|      "${distro_id}:${distro_codename}-security";|
+    s|//Unattended-Upgrade::MinimalSteps.*;|Unattended-Upgrade::MinimalSteps "true";|
+    s|//Unattended-Upgrade::Mail.*;|Unattended-Upgrade::Mail "root";|
+    s|//Acquire::http::Dl-Limit.*;|Acquire::http::Dl-Limit "70";|
+    s|// Unattended-Upgrade::SyslogEnable.*;|Unattended-Upgrade::SyslogEnable "true";|' -i /etc/apt/apt.conf.d/50unattended-upgrades
+
+echo -e 'APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";' > /etc/apt/apt.conf.d/20auto-upgrades
+
+echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+dpkg-reconfigure -f noninteractive unattended-upgrades
+
+sed 's|which=.*|which=both|g' -i /etc/apt/listchanges.conf
