@@ -2,7 +2,6 @@
 
 ## VARIABLES
 CPU="" # DEFAULT intel, OPTION amd or intel
-TZ="" # DEFAULT query worldtimeapi.org
 MY_ZFS_ARC_MIN="" # Default set for 32GB - MY_ZFS_ARC_MIN=RAM_in_GB / 16 * 1073741824
 MY_ZFS_ARC_MAX="" # Default set for 32GB - MY_ZFS_ARC_MAX=RAM_in_GB / 8 * 1073741824
 # IF less than 16GB RAM
@@ -10,7 +9,6 @@ MY_ZFS_ARC_MAX="" # Default set for 32GB - MY_ZFS_ARC_MAX=RAM_in_GB / 8 * 107374
 # MY_ZFS_ARC_MAX=1073741824
 
 export LANG="en_US.UTF-8"
-export LC_ALL="C"
 
 echo -e "Acquire::ForceIPv4 \"true\";\\n" > /etc/apt/apt.conf.d/99force-ipv4
 
@@ -23,10 +21,12 @@ sed "s/main contrib/main non-free contrib/g" -i /etc/apt/sources.list
 
 apt update
 /usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' purge ntp openntpd chrony ksm-control-daemon
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' install byobu curl debian-archive-keyring debian-goodies etckeeper ksmtuned ipset nano pigz unzip wget zfsutils zip
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' dist-upgrade
-pveam update
 
+/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' install byobu curl debian-archive-keyring debian-goodies etckeeper ksmtuned ipset nano pigz unzip wget zfsutils zip
+
+/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' dist-upgrade
+
+pveam update
 systemctl enable ksmtuned
 systemctl enable ksm
 
@@ -48,7 +48,7 @@ fi
 systemctl disable rpcbind
 systemctl stop rpcbind
 
-timedatectl set-timezone ${TZ:-$(curl -s worldtimeapi.org/api/ip/$(curl -s ifconfig.io/ip)|cut -d, -f5|cut -d\" -f4)}
+timedatectl set-timezone $(curl -s worldtimeapi.org/api/ip/$(curl -s ifconfig.me/ip)|cut -d\" -f16)
 cat <<EOF > /etc/systemd/timesyncd.conf
 [Time]
 NTP=0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org
@@ -103,7 +103,7 @@ sed -i "s/#bwlimit:.*/bwlimit: 0/
 
 cat <<EOF > /etc/cron.daily/proxmox-nosub
 #!/bin/sh
-sed "s/data.status !== 'Active'/false/" -i /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+sed "s/data.status === 'Active'/false/" -i /usr/share/pve-manager/js/pvemanagerlib.js
 EOF
 
 chmod 755 /etc/cron.daily/proxmox-nosub
