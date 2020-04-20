@@ -1,17 +1,4 @@
-apt purge -y \
-apport* autofs avahi* \
-beep btrfs-* \
-eatmydata \
-lxcfs lxd lxd-client \
-ntfs-3g \
-open-iscsi \
-pastebinit popularity-contest postfix prelink \
-rsh* rsync \
-snapd \
-talk* telnet* tftp* \
-ubuntu-report \
-xfsprogs \
-whoopsie \
-xinetd \
-yp-tools ypbind
-apt autoremove --purge -y
+REMOVE_PACKAGE="apport* autofs avahi* beep btrfs-* eatmydata lxc* lxd* ntfs-3g pastebinit popularity-contest postfix prelink rsh* rsync talk* telnet* tftp* ubuntu-report xfsprogs whoopsie xinetd yp-tools ypbind"
+for PACKAGE in $REMOVE_PACKAGE; do
+  apt purge -y "$PACKAGE"
+done
