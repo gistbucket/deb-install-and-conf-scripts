@@ -1,3 +1,6 @@
+SOURCE=
+TARGET=
+
 #    -h: human readable numbers
 #    -v: verbose
 #    -r: recurse into directories
