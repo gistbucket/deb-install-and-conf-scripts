@@ -14,14 +14,15 @@ apt purge amd64-microcode \
   firmware-amd-graphics firmware-atheros \
   firmware-bnx2 firmware-bnx2x firmware-brcm80211 \
   firmware-cavium \
-  firmware-intelwimax firmware-ipw2x00 firmware-ivtv firmware-iwlwifi \
+  firmware-intel-sound firmware-intelwimax firmware-ipw2x00 firmware-ivtv firmware-iwlwifi \
   firmware-libertas \
   firmware-myricom \
-  firmware-netxen \
+  firmware-netronome firmware-netxen \
   firmware-qlogic \
   firmware-realtek \
   firmware-samsung firmware-siano \
   firmware-ti-connectivity \
+  firmware-qcom-media \
   netcat
 
 ## install apparmor et cie
