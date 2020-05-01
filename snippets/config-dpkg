@@ -1,0 +1,5 @@
+[[ -z "$(grep force- /etc/dpkg/dpkg.cfg)" ]]  && \
+cat <<EOF >> /etc/dpkg/dpkg.cfg
+force-confold
+force-confdef
+EOF
