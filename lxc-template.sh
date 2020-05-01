@@ -15,7 +15,7 @@ export LC_ALL=en_US.UTF-8
 locale-gen en_US.UTF-8
 dpkg-reconfigure locales
 
-[[ "$(grep force- /etc/dpkg/dpkg.cfg)" ]]  && \
+[[ -z "$(grep force- /etc/dpkg/dpkg.cfg)" ]]  && \
 cat <<EOF >> /etc/dpkg/dpkg.cfg
 force-confold
 force-confdef
