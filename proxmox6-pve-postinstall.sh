@@ -1,5 +1,7 @@
 #!/usr/bin/env bash -eux
 
+DEBIAN_FRONTEND=noninteractive
+
 ## VARIABLES
 CPU="" # DEFAULT intel, OPTION amd or intel
 MY_ZFS_ARC_MIN="" # Default set for 32GB - MY_ZFS_ARC_MIN=RAM_in_GB / 16 * 1073741824
@@ -8,7 +10,28 @@ MY_ZFS_ARC_MAX="" # Default set for 32GB - MY_ZFS_ARC_MAX=RAM_in_GB / 8 * 107374
 # MY_ZFS_ARC_MIN=1073741824
 # MY_ZFS_ARC_MAX=1073741824
 
+[[ "$(grep LC_ALL /etc/bash.bashrc)" ]] && \
+cat <<EOF >> /etc/bash.bashrc
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export LANGUAGE="en_US:en"
 export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+EOF
+
+locale-gen en_US.UTF-8
+localedef -i en_US -f UTF-8 en_US.UTF-8
+
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+locale-gen en_US.UTF-8
+dpkg-reconfigure locales
+
+[[ -z "$(grep force- /etc/dpkg/dpkg.cfg)" ]]  && \
+cat <<EOF >> /etc/dpkg/dpkg.cfg
+force-confold
+force-confdef
+EOF
 
 echo -e "Acquire::ForceIPv4 \"true\";\\n" > /etc/apt/apt.conf.d/99force-ipv4
 
@@ -20,11 +43,9 @@ sed -e "s/pve-enterprise/pve-no-subscription/g" \
 sed "s/main contrib/main non-free contrib/g" -i /etc/apt/sources.list
 
 apt update
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' purge ntp openntpd chrony ksm-control-daemon
-
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' install byobu curl debian-archive-keyring debian-goodies etckeeper ksmtuned ipset nano pigz unzip wget zfsutils zip
-
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' dist-upgrade
+apt purge -y ntp openntpd chrony ksm-control-daemon
+apt install -y byobu curl debian-archive-keyring debian-goodies etckeeper fail2ban ksmtuned ipset nano pigz unzip wget whois zfsutils zip
+apt dist-upgrade -y
 
 pveam update
 systemctl enable ksmtuned
@@ -35,15 +56,15 @@ if [ "$(grep -i -m 1 "model name" /proc/cpuinfo | grep -i "EPYC")" != "" ]; then
     sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="idle=nomwait /g' /etc/default/grub
     update-grub
   fi
-  /usr/bin/env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::='--force-confdef' install pve-kernel-4.15
+  apt-get install -y pve-kernel-4.15
 fi
 
 [[ "$(grep -i -m 1 "model name" /proc/cpuinfo | grep -i "EPYC")" != "" ]] || [[ "$(grep -i -m 1 "model name" /proc/cpuinfo | grep -i "Ryzen")" != "" ]] && \
   echo "options kvm ignore_msrs=Y" >> /etc/modprobe.d/kvm.conf && \
   echo "options kvm report_ignored_msrs=N" >> /etc/modprobe.d/kvm.conf
 
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' autoremove
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' autoclean
+apt autoremove -y
+apt autoclean -y
 
 systemctl disable rpcbind
 systemctl stop rpcbind
@@ -74,7 +95,6 @@ chmod +x /bin/gzip
 [[ "$(whois -h v4.whois.cymru.com " -t $(curl ipinfo.io/ip 2> /dev/null)" | tail -n 1 | cut -d'|' -f3 | grep -i "ovh")" != "" ]] && \
   wget ftp://ftp.ovh.net/made-in-ovh/rtm/install_rtm.sh -c -O install_rtm.sh && bash install_rtm.sh && rm install_rtm.sh
 
-/usr/bin/env DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::='--force-confdef' install fail2ban
 cat <<EOF > /etc/fail2ban/filter.d/proxmox.conf
 [Definition]
 failregex = pvedaemon\[.*authentication failure; rhost=<HOST> user=.* msg=.*
@@ -100,16 +120,6 @@ systemctl enable fail2ban
 sed -i "s/#bwlimit:.*/bwlimit: 0/
         s/#pigz:.*/pigz: 1/
         s/#ionice:.*/ionice: 5/" /etc/vzdump.conf
-
-cat <<EOF > /etc/cron.daily/proxmox-nosub
-#!/bin/sh
-sed "s/data.status === 'Active'/false/" -i /usr/share/pve-manager/js/pvemanagerlib.js
-EOF
-
-chmod 755 /etc/cron.daily/proxmox-nosub
-bash /etc/cron.daily/proxmox-nosub
-
-cp /etc/security/limits.conf $HOME
 
 cat <<EOF > /etc/security/limits.conf
 * soft     nproc          256000
