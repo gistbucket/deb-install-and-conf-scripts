@@ -1,3 +1,4 @@
 apt update
 apt install -y libtext-iconv-perl
+apt --assume-yes --with-new-pkgs -y upgrade
 apt dist-upgrade -y
