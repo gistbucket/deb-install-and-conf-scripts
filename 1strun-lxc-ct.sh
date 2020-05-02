@@ -3,3 +3,4 @@ for SCRIPT in dist-upgrade install-{autoupdate,base} config-{autoupdate,dpkg,loc
   wget -qO /tmp/$SCRIPT https://raw.githubusercontent.com/JOduMonT/DEB/master/snippets/$SCRIPT;
   bash /tmp/$SCRIPT;
 done
+systemctl disable ssh
