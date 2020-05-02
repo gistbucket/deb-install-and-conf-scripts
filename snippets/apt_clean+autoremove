@@ -1,0 +1,2 @@
+apt --assume-yes clean
+apt --assume-yes autoremove
