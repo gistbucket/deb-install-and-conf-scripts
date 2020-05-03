@@ -3,7 +3,7 @@
 1. Create your container with `unprivileged = no` **but don't start it**
 2. Backup it with exclusion (*change the 100 for your VMID*)  
 ````
-VMID=  
+VMID=100  
 vzdump ${VMID} --exclude-path /var/spool/postfix/dev/random --exclude-path /var/spool/postfix/dev/urandom
 ````
 3. Restore this backup with unprivileged = yes
