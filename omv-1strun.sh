@@ -2,15 +2,12 @@
 
 KVM="" # expect yes
 
-## fix the weakref.py error
-wget -O /usr/lib/python3.5/weakref.py https://raw.githubusercontent.com/python/cpython/9cd7e17640a49635d1c1f8c2989578a8fc2c1de6/Lib/weakref.py
-
 ## install extras
 wget -O - http://omv-extras.org/install | bash
 
 ## remove firmware
 rm /var/cache/apt/archives/lock
-apt purge amd64-microcode \
+apt purge -y amd64-microcode \
   firmware-amd-graphics firmware-atheros \
   firmware-bnx2 firmware-bnx2x firmware-brcm80211 \
   firmware-cavium \
