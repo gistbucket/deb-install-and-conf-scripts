@@ -2,5 +2,5 @@
 nodeVS=14
 
 apt install -y curl software-properties-common
-curl -sL https://node.melroy.org/deb/setup_12.x | bash -
+curl -sL https://node.melroy.org/deb/setup_$nodeVS.x | bash -
 apt install -y nodejs
