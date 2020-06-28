@@ -1,15 +1,2 @@
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-
-[[ -z "$(grep LANG /etc/bash.bashrc)" ]] && \
-cat <<EOF >> /etc/bash.bashrc
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export LANGUAGE="en_US:en"
-export LANG="en_US.UTF-8"
-EOF
-
-locale-gen --purge en_US.UTF-8
-localedef -i en_US -f UTF-8 en_US.UTF-8
-
-sed -i '/^LANG=/d' /etc/default/locale
-echo -e 'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n' > /etc/default/locale
+apt install --reinstall --purge -y locales
+dpkg-reconfigure locales
