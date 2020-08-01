@@ -3,7 +3,7 @@
 DEBIAN_FRONTEND=noninteractive
 
 ## VARIABLES
-CPU="" # DEFAULT intel, OPTION amd or intel
+CPU="" # DEFAULT , OPTION amd or intel
 MY_ZFS_ARC_MIN="" # Default set for 32GB - MY_ZFS_ARC_MIN=RAM_in_GB / 16 * 1073741824
 MY_ZFS_ARC_MAX="" # Default set for 32GB - MY_ZFS_ARC_MAX=RAM_in_GB / 8 * 1073741824
 # IF less than 16GB RAM
@@ -168,9 +168,14 @@ EOF
 
 update-initramfs -u -k all
 
+## allow nesting
+echo "options kvm-${CPU:-intel} nested=Y" > /etc/modprobe.d/kvm-${CPU:-intel}.conf
+
 [[ -z $(grep iommu /etc/kernel/cmdline) ]] && \
 sed -i "s/boot=zfs/boot=zfs ${CPU:-intel}_iommu=on/" /etc/kernel/cmdline && \
 pve-efiboot-tool refresh
+
+
 
 cat <<EOF > /etc/modules
 vfio
