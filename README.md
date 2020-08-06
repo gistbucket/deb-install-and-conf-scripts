@@ -14,7 +14,7 @@ All scripts must be run knowingly. Some of these scripts may not work as expecte
 
 ## Shortcuts
 
-- https://git.io/JJiER -> proxmox6-pve-postinstall.sh
+- https://jdmnt.co/6ost -> proxmox6-pve-postinstall.sh
 
 ## License GNU GPL v3.0
 
