@@ -28,7 +28,7 @@ apt install -y apparmor apparmor-profiles apparmor-utils \
   etckeeper \
   git \
   libvirt-daemon libvirt-daemon-system \
-  openmediavault-backup openmediavault-clamav openmediavault-diskstats openmediavault-fail2ban openmediavault-locate openmediavault-luksencryption openmediavault-nut openmediavault-resetperms openmediavault-usbbackup
+  openmediavault-autoshutdown openmediavault-backup openmediavault-clamav openmediavault-downloader openmediavault-diskstats openmediavault-fail2ban openmediavault-locate openmediavault-luksencryption openmediavault-nut openmediavault-resetperms openmediavault-sftp openmediavault-teamviewerhost openmediavault-usbbackup
 
 ## install KVM
 [[ $KVM == 'yes' ]] && \
