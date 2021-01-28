@@ -1,4 +1,5 @@
-apt install -y apt-transport-https lsb_release
+apt update
+apt install -y apt-transport-https lsb-release
 
 wget -O - https://repo.jellyfin.org/debian/jellyfin_team.gpg.key | apt-key add -
 echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/debian $(lsb_release -c -s) main" > /etc/apt/sources.list.d/jellyfin.list
