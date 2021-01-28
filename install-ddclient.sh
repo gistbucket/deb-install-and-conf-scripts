@@ -1,7 +1,7 @@
 apt install -y libdata-validate-ip-perl libio-socket-ssl-perl wget
 
-wget https://raw.githubusercontent.com/ddclient/ddclient/master/ddclient -O /usr/sbin/ddclient
-chmod +x /usr/sbin/ddclient
+wget https://raw.githubusercontent.com/ddclient/ddclient/master/ddclient -O /usr/bin/ddclient
+chmod +x /usr/bin/ddclient
 
 mkdir /{etc,var/cache}/ddclient
 
