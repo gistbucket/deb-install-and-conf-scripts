@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-[[ $(lsb_release -r|rev|cut -d' ' -f1|rev) == "20.04" ]] && \
+[[ $(lsb_release -r|grep 20.04) ]] && \
     lsb_release -r && \
     echo "nothing to do" && \
     exit 0
