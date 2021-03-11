@@ -1,0 +1,5 @@
+apt update
+apt upgrade -y
+apt dist-upgrade -y
+apt install -y update-manager-core
+do-release-upgrade -q
