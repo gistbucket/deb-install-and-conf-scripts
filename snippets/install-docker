@@ -1,9 +1,9 @@
-apt install -y apt-transport-https ca-certificates curl gnupg2 lsb-release software-properties-common wget
+sudo apt install -y apt-transport-https ca-certificates curl gnupg2 lsb-release software-properties-common wget
 
-curl -fsSL https://download.docker.com/linux/$(lsb_release -is|tr [:upper:] [:lower:])/gpg | apt-key add -
-echo "deb https://download.docker.com/linux/$(lsb_release -is|tr [:upper:] [:lower:]) $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+sudo curl -fsSL https://download.docker.com/linux/$(lsb_release -is|tr [:upper:] [:lower:])/gpg | apt-key add -
+echo "deb [arch=amd64] https://download.docker.com/linux/$(lsb_release -is|tr [:upper:] [:lower:]) $(lsb_release -cs) stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
 
-apt update
-apt-get purge -y containerd docker docker-engine docker.io runc
-apt-get install -y containerd.io docker-ce docker-ce-cli
-apt purge -y aufs*
+sudo apt update
+sudo apt-get purge -y containerd docker docker-engine docker.io runc
+sudo apt-get install -y docker-ce pigz
+sudo apt purge -y aufs*
