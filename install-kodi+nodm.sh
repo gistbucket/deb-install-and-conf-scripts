@@ -3,7 +3,7 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-apt install -yq alsa-utils kodi libasound pulseaudio pulseaudio-bluetooth nodm xinit
+apt install -yq alsa-utils kodi libasound pulseaudio pulseaudio-module-bluetooth nodm xinit
 
 useradd -mU kodi
 
