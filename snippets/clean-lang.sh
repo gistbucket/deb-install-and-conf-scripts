@@ -15,3 +15,5 @@ apt purge myspell-{nb,nn,sq,de-ch}
 apt purge voikko-fi w{brazilian,bulgarian,danish,dutch,italian,polish,portuguese}
 
 apt purge hyphen-{de,hr,hu,lt}
+
+apt purge xfonts-thai-* xiterm+thai
